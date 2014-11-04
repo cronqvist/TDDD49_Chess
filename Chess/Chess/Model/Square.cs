@@ -38,7 +38,7 @@ namespace Chess.Model
             }
         }
 
-        private Brush originalBackground;
+        public Brush OriginalBackground { get; private set; }
         private Brush attackedBackground;
         private Brush moveBackground;
 
@@ -57,7 +57,7 @@ namespace Chess.Model
         {
             Background = background;
 
-            originalBackground = background;
+            OriginalBackground = background;
             attackedBackground = new SolidColorBrush(Colors.Red);
             moveBackground = new SolidColorBrush(Colors.LightGreen);
         }
@@ -66,7 +66,7 @@ namespace Chess.Model
         {
             if (bg == Backgrounds.Original)
             {
-                Background = originalBackground;
+                Background = OriginalBackground;
             }
             else if (bg == Backgrounds.Move)
             {

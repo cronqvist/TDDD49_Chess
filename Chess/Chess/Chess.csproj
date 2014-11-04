@@ -54,6 +54,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\SquareValueConverter.cs" />
+    <Compile Include="Model\Move.cs" />
     <Compile Include="Model\Piece.cs" />
     <Compile Include="Model\Square.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

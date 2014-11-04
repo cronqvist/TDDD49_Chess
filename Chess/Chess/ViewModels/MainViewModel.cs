@@ -12,14 +12,15 @@ namespace Chess.ViewModels
 {
     public class MainViewModel
     {
-        public ICommand PressedButton { get; private set; }
         public ICommand SquarePressed { get; private set; }
 
         public Square[][] Board { get; private set; }
 
+        private List<Move> moves;
+        private Square selectedSquare;
+
         public MainViewModel()
         {
-            PressedButton = new SimpleCommand(ExecutePressedButton, CanExecutePressedButton);
             SquarePressed = new SimpleCommand(ExecuteSquarePressed, CanExecuteSquarePressed);
 
             initBoard();
@@ -90,15 +91,6 @@ namespace Chess.ViewModels
         #endregion
 
         #region commands
-        private bool CanExecutePressedButton(object parameter)
-        {
-            return true;
-        }
-
-        private void ExecutePressedButton(object parameter)
-        {
-            throw new NotImplementedException();
-        }
 
         private bool CanExecuteSquarePressed(object parameter)
         {
@@ -108,12 +100,45 @@ namespace Chess.ViewModels
         private void ExecuteSquarePressed(object parameter)
         {
             Square square = parameter as Square;
+            var piece = square.Piece;
 
-            if (square.Piece != null)
+            if (moves != null)
             {
-                Board[square.Piece.Position.X][square.Piece.Position.Y + 1].Piece = square.Piece;
-                square.Piece.Position = new PiecePosition(square.Piece.Position.X, square.Piece.Position.Y + 1);
-                square.Piece = null;
+                if (square.Background != square.OriginalBackground)
+                {
+                    foreach (var move in moves)
+                    {
+                        if (Board[move.Position.X][move.Position.Y] == square)
+                        {
+                            selectedSquare.Piece.Position = new PiecePosition(move.Position.X, move.Position.Y);
+                            Board[move.Position.X][move.Position.Y].Piece = selectedSquare.Piece;
+                            selectedSquare.Piece = null;
+
+                            break;
+                        }
+                    }
+                }
+
+                foreach (var move in moves)
+                {
+                    Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Original);
+                }
+
+                selectedSquare = null;
+                moves = null;
+            }
+            else if (square.Piece != null)
+            {
+                selectedSquare = square;
+
+                moves = piece.GetAvailableMoves();
+                foreach (var move in moves)
+                {
+                    if (move.Type == MoveType.Normal)
+                        Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Move);
+                    else if (move.Type == MoveType.Attack)
+                        Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Attacked);
+                }
             }
         }
     }
