@@ -15,17 +15,6 @@ namespace Chess.Model
         Attacked
     }
 
-    public struct SquarePosition
-    {
-        int X, Y;
-
-        public SquarePosition(int x, int y) : this()
-        {
-            X = x;
-            Y = y;
-        }
-    }
-
     public class Square : INotifyPropertyChanged
     {
         #region property changed
@@ -37,6 +26,17 @@ namespace Chess.Model
                 handler(this, new PropertyChangedEventArgs(p));
         }
         #endregion property changed
+
+        private Piece _piece;
+        public Piece Piece
+        {
+            get { return _piece; }
+            set
+            {
+                _piece = value;
+                OnPropertyChanged("Piece");
+            }
+        }
 
         private Brush originalBackground;
         private Brush attackedBackground;
@@ -53,11 +53,8 @@ namespace Chess.Model
             }
         }
 
-        public SquarePosition Position;
-
-        public Square(SquarePosition pos, Brush background)
+        public Square(Brush background)
         {
-            Position = pos;
             Background = background;
 
             originalBackground = background;

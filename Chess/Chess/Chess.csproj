@@ -53,6 +53,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\SquareValueConverter.cs" />
+    <Compile Include="Model\Piece.cs" />
     <Compile Include="Model\Square.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">
@@ -102,7 +104,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Converters\" />
+    <Resource Include="Resources\Pieces\bB.png" />
+    <Resource Include="Resources\Pieces\bK.png" />
+    <Resource Include="Resources\Pieces\bN.png" />
+    <Resource Include="Resources\Pieces\bP.png" />
+    <Resource Include="Resources\Pieces\bQ.png" />
+    <Resource Include="Resources\Pieces\bR.png" />
+    <Resource Include="Resources\Pieces\wB.png" />
+    <Resource Include="Resources\Pieces\wK.png" />
+    <Resource Include="Resources\Pieces\wN.png" />
+    <Resource Include="Resources\Pieces\wP.png" />
+    <Resource Include="Resources\Pieces\wQ.png" />
+    <Resource Include="Resources\Pieces\wR.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
