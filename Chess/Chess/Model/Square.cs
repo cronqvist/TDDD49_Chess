@@ -15,11 +15,11 @@ namespace Chess.Model
         Attacked
     }
 
-    public struct SquarePoint
+    public struct SquarePosition
     {
         int X, Y;
 
-        public SquarePoint(int x, int y) : this()
+        public SquarePosition(int x, int y) : this()
         {
             X = x;
             Y = y;
@@ -53,9 +53,9 @@ namespace Chess.Model
             }
         }
 
-        public SquarePoint Position;
+        public SquarePosition Position;
 
-        public Square(SquarePoint pos, Brush background)
+        public Square(SquarePosition pos, Brush background)
         {
             Position = pos;
             Background = background;
