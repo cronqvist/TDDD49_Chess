@@ -13,13 +13,22 @@ namespace Chess.ViewModels
     public class MainViewModel
     {
         public ICommand PressedButton { get; private set; }
+        public ICommand SquarePressed { get; private set; }
 
         public Square[][] Board { get; private set; }
 
         public MainViewModel()
         {
             PressedButton = new SimpleCommand(ExecutePressedButton, CanExecutePressedButton);
+            SquarePressed = new SimpleCommand(ExecuteSquarePressed, CanExecuteSquarePressed);
 
+            initBoard();
+        }
+
+        #region helper_functions
+
+        private void initBoard()
+        {
             Board = new Square[8][];
             for (int i = 0; i < 8; i++)
             {
@@ -78,6 +87,9 @@ namespace Chess.ViewModels
             }
         }
 
+        #endregion
+
+        #region commands
         private bool CanExecutePressedButton(object parameter)
         {
             return true;
@@ -87,5 +99,24 @@ namespace Chess.ViewModels
         {
             throw new NotImplementedException();
         }
+
+        private bool CanExecuteSquarePressed(object parameter)
+        {
+            return true;
+        }
+
+        private void ExecuteSquarePressed(object parameter)
+        {
+            Square square = parameter as Square;
+
+            if (square.Piece != null)
+            {
+                Board[square.Piece.Position.X][square.Piece.Position.Y + 1].Piece = square.Piece;
+                square.Piece.Position = new PiecePosition(square.Piece.Position.X, square.Piece.Position.Y + 1);
+                square.Piece = null;
+            }
+        }
     }
+
+    #endregion
 }
