@@ -24,7 +24,7 @@ namespace Chess.Game
         {
             Turn = Player.White;
 
-            ruleEngine = new RuleEngine(board);
+            ruleEngine = new RuleEngine(Board);
 
             initBoard();
         }
