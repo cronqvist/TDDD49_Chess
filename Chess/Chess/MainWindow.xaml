@@ -11,7 +11,7 @@
         <Converters:SquareValueConverter x:Key="SquareValueConverter" />
     </Window.Resources>
     <StackPanel>
-        <ItemsControl ItemsSource="{Binding Board, Converter={StaticResource SquareValueConverter}}">
+        <ItemsControl ItemsSource="{Binding GameEngine.Board, Converter={StaticResource SquareValueConverter}}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>
