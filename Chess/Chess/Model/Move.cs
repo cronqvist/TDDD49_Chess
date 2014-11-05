@@ -8,7 +8,7 @@ namespace Chess.Model
 {
     public enum MoveType
     {
-        Normal,
+        Move,
         Attack,
         PromoteQueen,
         PromoteKnight,

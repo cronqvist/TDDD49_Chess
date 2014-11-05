@@ -53,8 +53,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\SquareBackgroundValueConverter.cs" />
     <Compile Include="Converters\SquareValueConverter.cs" />
     <Compile Include="Game\GameEngine.cs" />
+    <Compile Include="Game\RuleEngine.cs" />
     <Compile Include="Model\Move.cs" />
     <Compile Include="Model\Piece.cs" />
     <Compile Include="Model\Square.cs" />

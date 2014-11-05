@@ -10,6 +10,8 @@ namespace Chess.Game
 {
     public class GameEngine
     {
+        private RuleEngine ruleEngine;
+
         public Square[][] Board { get; private set; }
 
         public Player Turn { get; private set; }
@@ -21,6 +23,8 @@ namespace Chess.Game
         public GameEngine()
         {
             Turn = Player.White;
+
+            ruleEngine = new RuleEngine(board);
 
             initBoard();
         }
@@ -41,13 +45,13 @@ namespace Chess.Game
                 moves = piece.GetAvailableMoves(); // gets the new moves for the current piece
                 foreach (var move in moves)
                 {
-                    if (move.Type == MoveType.Normal)
+                    if (move.Type == MoveType.Move)
                     {
-                        Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Move);
+                        Board[move.Position.X][move.Position.Y].Background = SquareBackground.Move;
                     }
                     else if (move.Type == MoveType.Attack)
                     {
-                        Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Attacked);
+                        Board[move.Position.X][move.Position.Y].Background = SquareBackground.Attacked;
                     }
                 }
             }
@@ -79,7 +83,7 @@ namespace Chess.Game
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    Board[i][j].SetBackground(Backgrounds.Original);
+                    Board[i][j].ResetBackground();
                     Board[i][j].Piece = null;
                 }
             }
@@ -123,9 +127,9 @@ namespace Chess.Game
                 for (int j = 0; j < 8; j++)
                 {
                     if ((j - i + 1) % 2 == 0)
-                        Board[i][j] = new Square(new SolidColorBrush(Colors.White));
+                        Board[i][j] = new Square(SquareBackground.White);
                     else
-                        Board[i][j] = new Square(new SolidColorBrush(Colors.DarkGray));
+                        Board[i][j] = new Square(SquareBackground.Black);
                 }
             }
 
@@ -146,7 +150,7 @@ namespace Chess.Game
         {
             foreach (var move in moves)
             {
-                Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Original);
+                Board[move.Position.X][move.Position.Y].ResetBackground();
             }
         }
     }

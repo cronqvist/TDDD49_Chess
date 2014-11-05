@@ -8,9 +8,10 @@ using System.Windows.Media;
 
 namespace Chess.Model
 {
-    public enum Backgrounds
+    public enum SquareBackground
     {
-        Original,
+        White,
+        Black,
         Move,
         Attacked
     }
@@ -38,12 +39,8 @@ namespace Chess.Model
             }
         }
 
-        public Brush OriginalBackground { get; private set; }
-        private Brush attackedBackground;
-        private Brush moveBackground;
-
-        private Brush _background;
-        public Brush Background
+        private SquareBackground _background;
+        public SquareBackground Background
         {
             get { return _background; }
             set
@@ -53,29 +50,18 @@ namespace Chess.Model
             }
         }
 
-        public Square(Brush background)
-        {
-            Background = background;
+        public SquareBackground OriginalBackground { get; private set; }
 
-            OriginalBackground = background;
-            attackedBackground = new SolidColorBrush(Colors.Red);
-            moveBackground = new SolidColorBrush(Colors.LightGreen);
+        public Square(SquareBackground bg)
+        {
+            Background = bg;
+
+            OriginalBackground = bg;
         }
 
-        public void SetBackground(Backgrounds bg)
+        public void ResetBackground()
         {
-            if (bg == Backgrounds.Original)
-            {
-                Background = OriginalBackground;
-            }
-            else if (bg == Backgrounds.Move)
-            {
-                Background = moveBackground;
-            }
-            else if (bg == Backgrounds.Attacked)
-            {
-                Background = attackedBackground;
-            }
+            Background = OriginalBackground;
         }
     }
 }
