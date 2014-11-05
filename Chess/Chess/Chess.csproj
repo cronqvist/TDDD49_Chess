@@ -99,12 +99,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Command\Command.csproj">
-      <Project>{0e9c660d-0e9f-4825-ba5c-7b7c017a41cf}</Project>
-      <Name>Command</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Pieces\bB.png" />
     <Resource Include="Resources\Pieces\bK.png" />
     <Resource Include="Resources\Pieces\bN.png" />
@@ -117,6 +111,12 @@
     <Resource Include="Resources\Pieces\wP.png" />
     <Resource Include="Resources\Pieces\wQ.png" />
     <Resource Include="Resources\Pieces\wR.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Command\Command.csproj">
+      <Project>{0e9c660d-0e9f-4825-ba5c-7b7c017a41cf}</Project>
+      <Name>Command</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

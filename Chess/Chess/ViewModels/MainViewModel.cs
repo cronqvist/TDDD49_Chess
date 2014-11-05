@@ -16,12 +16,16 @@ namespace Chess.ViewModels
 
         public Square[][] Board { get; private set; }
 
+        public Player Turn { get; private set; }
+
         private List<Move> moves;
         private Square selectedSquare;
 
         public MainViewModel()
         {
             SquarePressed = new SimpleCommand(ExecuteSquarePressed, CanExecuteSquarePressed);
+
+            Turn = Player.White;
 
             initBoard();
         }
@@ -102,43 +106,54 @@ namespace Chess.ViewModels
             Square square = parameter as Square;
             var piece = square.Piece;
 
-            if (moves != null)
-            {
-                if (square.Background != square.OriginalBackground)
-                {
-                    foreach (var move in moves)
-                    {
-                        if (Board[move.Position.X][move.Position.Y] == square)
-                        {
-                            selectedSquare.Piece.Position = new PiecePosition(move.Position.X, move.Position.Y);
-                            Board[move.Position.X][move.Position.Y].Piece = selectedSquare.Piece;
-                            selectedSquare.Piece = null;
-
-                            break;
-                        }
-                    }
-                }
-
-                foreach (var move in moves)
-                {
-                    Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Original);
-                }
-
-                selectedSquare = null;
-                moves = null;
-            }
-            else if (square.Piece != null)
+            if (piece != null && piece.Color == Turn) // a piece of correct turn was pressed
             {
                 selectedSquare = square;
 
-                moves = piece.GetAvailableMoves();
+                if (moves != null) // if there already are moves, reset them
+                {
+                    resetBackgrounds(moves);
+                }
+
+                moves = piece.GetAvailableMoves(); // gets the new moves for the current piece
                 foreach (var move in moves)
                 {
                     if (move.Type == MoveType.Normal)
+                    {
                         Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Move);
+                    }
                     else if (move.Type == MoveType.Attack)
+                    {
                         Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Attacked);
+                    }
                 }
+            }
+            else if (square.Background != square.OriginalBackground) // if one of the moves was pressed
+            {
+                // valid square was pressed for move
+                foreach (var move in moves) 
+                {
+                    if (Board[move.Position.X][move.Position.Y] == square) // find the move
+                    {
+                        selectedSquare.Piece.Position = new PiecePosition(move.Position.X, move.Position.Y);
+                        Board[move.Position.X][move.Position.Y].Piece = selectedSquare.Piece;
+                        selectedSquare.Piece = null;
+
+                        break;
+                    }
+                }
+
+                resetBackgrounds(moves);
+                selectedSquare = null;
+                moves = null;
+            }
+        }
+
+        private void resetBackgrounds(List<Move> moves)
+        {
+            foreach (var move in moves)
+            {
+                Board[move.Position.X][move.Position.Y].SetBackground(Backgrounds.Original);
             }
         }
     }
