@@ -37,12 +37,12 @@ namespace Chess.Game
 
         private Boolean isInside(PiecePosition pos)
         {
-            return true;
+            return (pos.X >= 0 && pos.X <= 7 && pos.Y >= 0 && pos.Y <= 7) ;
         }
 
         private Boolean isValid(PiecePosition pos)
         {
-            return true;
+            return isInside(pos);
         }
     }
 }
