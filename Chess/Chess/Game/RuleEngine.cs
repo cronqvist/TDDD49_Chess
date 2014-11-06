@@ -15,5 +15,15 @@ namespace Chess.Game
         {
             this.board = board;
         }
+
+        public List<Move> GetAvailableMoves(Piece piece)
+        {
+            List<Move> moves = new List<Move>();
+            // piece.hämta movementvektorer typ
+
+            // beräkna giltliga drag 
+
+            return moves;
+        }
     }
 }
