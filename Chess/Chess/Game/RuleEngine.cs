@@ -19,14 +19,28 @@ namespace Chess.Game
         public List<Move> GetAvailableMoves(Piece piece)
         {
             List<Move> moves = new List<Move>();
+            
             // piece.hämta movementvektorer typ
+            List<PiecePosition> positions = piece.GetAvailableMoves();
 
             // beräkna giltliga drag 
+            foreach (var pos in positions)
+            {
+                if (isValid(pos))
+                {
+                    moves.Add(new Move(pos, MoveType.Move));
+                }
+            }
 
             return moves;
         }
 
         private Boolean isInside(PiecePosition pos)
+        {
+            return true;
+        }
+
+        private Boolean isValid(PiecePosition pos)
         {
             return true;
         }
