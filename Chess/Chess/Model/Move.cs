@@ -15,12 +15,12 @@ namespace Chess.Model
         PromoteRook,
         PromoteBishop
     }
-    public class PiecePosition
+    public class Move
     {
         public PiecePosition Position { get; private set; }
         public MoveType Type { get; private set; }
 
-        public PiecePosition(PiecePosition pos, MoveType type)
+        public Move(PiecePosition pos, MoveType type)
         {
             Position = pos;
             Type = type;

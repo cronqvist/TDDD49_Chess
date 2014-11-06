@@ -16,9 +16,9 @@ namespace Chess.Game
             this.board = board;
         }
 
-        public List<PiecePosition> GetAvailableMoves(Piece piece)
+        public List<Move> GetAvailableMoves(Piece piece)
         {
-            List<PiecePosition> moves = new List<PiecePosition>();
+            List<Move> moves = new List<Move>();
             // piece.hämta movementvektorer typ
 
             // beräkna giltliga drag 
@@ -28,8 +28,7 @@ namespace Chess.Game
 
         private Boolean isInside(PiecePosition pos)
         {
-
-            return null;
+            return true;
         }
     }
 }

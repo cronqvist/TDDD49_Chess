@@ -16,7 +16,7 @@ namespace Chess.Game
 
         public Player Turn { get; private set; }
 
-        private List<PiecePosition> moves;
+        private List<Move> moves;
 
         private Square selectedSquare;
 
@@ -42,7 +42,7 @@ namespace Chess.Game
                     resetBackgrounds(moves);
                 }
 
-                moves = piece.GetAvailableMoves(); // gets the new moves for the current piece
+                moves = ruleEngine.GetAvailableMoves(piece); // gets the new moves for the current piece
                 foreach (var move in moves)
                 {
                     if (move.Type == MoveType.Move)
@@ -146,7 +146,7 @@ namespace Chess.Game
                 Turn = Player.White;
             }
         }
-        private void resetBackgrounds(List<PiecePosition> moves)
+        private void resetBackgrounds(List<Move> moves)
         {
             foreach (var move in moves)
             {

@@ -84,13 +84,11 @@ namespace Chess.Model
                 forward = -1;
             }
 
-            moves.Add(new PiecePosition(new PiecePosition(Position.X, Position.Y + forward), MoveType.Move));
-            moves.Add(new PiecePosition(new PiecePosition(Position.X - 1, Position.Y + forward), MoveType.Attack));
-            moves.Add(new PiecePosition(new PiecePosition(Position.X + 1, Position.Y + forward), MoveType.Attack));
+            moves.Add(new PiecePosition(Position.X, Position.Y + forward));
 
             if (Position.Equals(startPosition))
             {
-                moves.Add(new PiecePosition(new PiecePosition(Position.X, Position.Y + forward * 2), MoveType.Move));
+                moves.Add(new PiecePosition(Position.X, Position.Y + forward * 2));
             }
 
             return moves;
