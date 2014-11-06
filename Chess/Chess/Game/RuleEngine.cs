@@ -16,14 +16,20 @@ namespace Chess.Game
             this.board = board;
         }
 
-        public List<Move> GetAvailableMoves(Piece piece)
+        public List<PiecePosition> GetAvailableMoves(Piece piece)
         {
-            List<Move> moves = new List<Move>();
+            List<PiecePosition> moves = new List<PiecePosition>();
             // piece.hämta movementvektorer typ
 
             // beräkna giltliga drag 
 
             return moves;
+        }
+
+        private Boolean isInside(PiecePosition pos)
+        {
+
+            return null;
         }
     }
 }

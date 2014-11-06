@@ -16,7 +16,7 @@ namespace Chess.Game
 
         public Player Turn { get; private set; }
 
-        private List<Move> moves;
+        private List<PiecePosition> moves;
 
         private Square selectedSquare;
 
@@ -146,7 +146,7 @@ namespace Chess.Game
                 Turn = Player.White;
             }
         }
-        private void resetBackgrounds(List<Move> moves)
+        private void resetBackgrounds(List<PiecePosition> moves)
         {
             foreach (var move in moves)
             {
