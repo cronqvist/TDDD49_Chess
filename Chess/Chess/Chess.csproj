@@ -116,7 +116,7 @@
     <Resource Include="Resources\Pieces\wR.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Command\Command.csproj">
+    <ProjectReference Include="..\Command\Command.csproj">
       <Project>{0e9c660d-0e9f-4825-ba5c-7b7c017a41cf}</Project>
       <Name>Command</Name>
     </ProjectReference>
