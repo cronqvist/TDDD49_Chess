@@ -23,10 +23,9 @@ namespace Chess.Game
         public GameEngine()
         {
             Turn = Player.White;
+            initBoard();
 
             ruleEngine = new RuleEngine(Board);
-
-            initBoard();
         }
 
         public void HandleInput(Square square)

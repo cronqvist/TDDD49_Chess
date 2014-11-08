@@ -21,14 +21,28 @@ namespace Chess.Game
             List<Move> moves = new List<Move>();
             
             // piece.hämta movementvektorer typ
-            List<PiecePosition> positions = piece.GetAvailableMoves();
+            List<Movement> positions = piece.GetAvailableMoves();
 
             // beräkna giltliga drag 
             foreach (var pos in positions)
             {
-                if (isValid(pos))
+                if (pos is MovementPosition)
                 {
-                    moves.Add(new Move(pos, MoveType.Move));
+                    if (isValid(pos.Position) && isEmpty(pos.Position))
+                    {
+                        moves.Add(new Move(pos.Position, MoveType.Move));
+                    }
+                }
+                else if (pos is MovementVector)
+                {
+
+                }
+                else if (pos is MovementAttack)
+                {
+                    if (isValid(pos.Position) && isEnemy(piece, pos.Position))
+                    {
+                        moves.Add(new Move(pos.Position, MoveType.Attack));
+                    }
                 }
             }
 
@@ -37,12 +51,27 @@ namespace Chess.Game
 
         private Boolean isInside(PiecePosition pos)
         {
-            return (pos.X >= 0 && pos.X <= 7 && pos.Y >= 0 && pos.Y <= 7) ;
+            return (pos.X >= 0 && pos.X <= 7 && pos.Y >= 0 && pos.Y <= 7);
+        }
+
+        private Boolean isEmpty(PiecePosition pos)
+        {
+            return (board[pos.X][pos.Y].Piece == null);
         }
 
         private Boolean isValid(PiecePosition pos)
         {
             return isInside(pos);
+        }
+
+        private Boolean isEnemy(Piece piece, PiecePosition pos)
+        {
+            if (board[pos.X][pos.Y].Piece != null)
+            {
+                return (board[pos.X][pos.Y].Piece.Color != piece.Color);
+            }
+
+            return false;
         }
     }
 }

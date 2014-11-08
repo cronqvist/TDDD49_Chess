@@ -58,6 +58,7 @@
     <Compile Include="Game\GameEngine.cs" />
     <Compile Include="Game\RuleEngine.cs" />
     <Compile Include="Model\Move.cs" />
+    <Compile Include="Model\Movement.cs" />
     <Compile Include="Model\Piece.cs" />
     <Compile Include="Model\Square.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

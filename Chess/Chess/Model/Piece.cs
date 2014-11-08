@@ -48,7 +48,7 @@ namespace Chess.Model
             Position = pos;
         }
 
-        public abstract List<PiecePosition> GetAvailableMoves();
+        public abstract List<Movement> GetAvailableMoves();
     }
 
     public class Pawn : Piece
@@ -70,9 +70,9 @@ namespace Chess.Model
             }
         }
 
-        public override List<PiecePosition> GetAvailableMoves()
+        public override List<Movement> GetAvailableMoves()
         {
-            List<PiecePosition> moves = new List<PiecePosition>();
+            List<Movement> moves = new List<Movement>();
 
             int forward;
             if (Color == Player.White)
@@ -84,11 +84,14 @@ namespace Chess.Model
                 forward = -1;
             }
 
-            moves.Add(new PiecePosition(Position.X, Position.Y + forward));
+            moves.Add(new MovementPosition(new PiecePosition(Position.X, Position.Y + forward)));
+
+            moves.Add(new MovementAttack(new PiecePosition(Position.X + 1, Position.Y + forward)));
+            moves.Add(new MovementAttack(new PiecePosition(Position.X - 1, Position.Y + forward)));
 
             if (Position.Equals(startPosition))
             {
-                moves.Add(new PiecePosition(Position.X, Position.Y + forward * 2));
+                moves.Add(new MovementPosition(new PiecePosition(Position.X, Position.Y + forward * 2)));
             }
 
             return moves;
@@ -110,9 +113,9 @@ namespace Chess.Model
             }
         }
 
-        public override List<PiecePosition> GetAvailableMoves()
+        public override List<Movement> GetAvailableMoves()
         {
-            List<PiecePosition> moves = new List<PiecePosition>();
+            List<Movement> moves = new List<Movement>();
 
 
             return moves;
@@ -134,7 +137,7 @@ namespace Chess.Model
             }
         }
 
-        public override List<PiecePosition> GetAvailableMoves()
+        public override List<Movement> GetAvailableMoves()
         {
             throw new NotImplementedException();
         }
@@ -155,7 +158,7 @@ namespace Chess.Model
             }
         }
 
-        public override List<PiecePosition> GetAvailableMoves()
+        public override List<Movement> GetAvailableMoves()
         {
             throw new NotImplementedException();
         }
@@ -176,7 +179,7 @@ namespace Chess.Model
             }
         }
 
-        public override List<PiecePosition> GetAvailableMoves()
+        public override List<Movement> GetAvailableMoves()
         {
             throw new NotImplementedException();
         }
@@ -197,7 +200,7 @@ namespace Chess.Model
             }
         }
 
-        public override List<PiecePosition> GetAvailableMoves()
+        public override List<Movement> GetAvailableMoves()
         {
             throw new NotImplementedException();
         }
