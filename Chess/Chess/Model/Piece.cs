@@ -48,7 +48,41 @@ namespace Chess.Model
             Position = pos;
         }
 
-        public abstract List<Move> GetAvailableMoves();
+        protected List<Move> GetMovesInLine(GameBoard board, int dirX, int dirY, int steps=8)
+        {
+            List<Move> ret = new List<Move>();
+            PiecePosition curPos = new PiecePosition(Position.X + dirX, Position.Y + dirY);
+
+            for (int i = 0; i < steps; ++i)
+            {
+               if(!GameBoard.IsInBoard(curPos.X, curPos.Y))
+                    break;
+
+                Square sq = board[curPos.X, curPos.Y];
+                if (sq.Piece == null)
+                {
+                    ret.Add(new Move(curPos, MoveType.Move));
+                }
+                else if (sq.Piece.Color != Color)
+                {
+                    ret.Add(new Move(curPos, MoveType.Attack));
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+
+                curPos.X += dirX;
+                curPos.Y += dirY;
+            }
+
+  
+
+            return ret;
+        }
+
+        public abstract List<Move> GetAvailableMoves(GameBoard board);
     }
 
     public class Pawn : Piece
@@ -70,30 +104,56 @@ namespace Chess.Model
             }
         }
 
-        public override List<Move> GetAvailableMoves()
+        public override List<Move> GetAvailableMoves(GameBoard board)
         {
-            List<Move> moves = new List<Move>();
+            List<Move> ret = new List<Move>();
+            PiecePosition pos = Position;
 
-            int forward;
-            if (Color == Player.White)
-            {
-                forward = 1;
+            int nr_steps = pos.Y == 1 || pos.Y == 6 ? 2 : 1;
+            int dir = Color == Player.Black ? -1 : 1;
+
+            IEnumerable<int> steps = Enumerable.Range(1,nr_steps);
+
+            foreach(int i in steps) {
+                int row = pos.Y + i*dir;
+                Square curSquare = board.Board[pos.X, row];
+
+                if (!GameBoard.IsInBoard(pos.X, row))
+                    break;
+
+                if (curSquare.Piece == null)
+                {
+                    ret.Add(new Move(new PiecePosition(pos.X, row), MoveType.Move));
+                }
+                else
+                {
+                    break;
+                }
             }
-            else
+
+            int attackY = pos.Y + dir;
+            int attackX1 = pos.X - 1;
+            int attackX2 = pos.X + 1;
+
+            if (GameBoard.IsInBoard(attackX1, attackY))
             {
-                forward = -1;
+                Piece other = board.GetPieceAt(attackX1, attackY);
+                if (other != null && other.Color != Color) 
+                {
+                    ret.Add(new Move(new PiecePosition(attackX1, attackY), MoveType.Attack));
+                }
             }
 
-            moves.Add(new Move(new PiecePosition(Position.X, Position.Y + forward), MoveType.Move));
-            moves.Add(new Move(new PiecePosition(Position.X - 1, Position.Y + forward), MoveType.Attack));
-            moves.Add(new Move(new PiecePosition(Position.X + 1, Position.Y + forward), MoveType.Attack));
-
-            if (Position.Equals(startPosition))
+            if (GameBoard.IsInBoard(attackX2, attackY))
             {
-                moves.Add(new Move(new PiecePosition(Position.X, Position.Y + forward * 2), MoveType.Move));
+                Piece other = board.GetPieceAt(attackX2, attackY);
+                if (other != null && other.Color != Color)
+                {
+                    ret.Add(new Move(new PiecePosition(attackX2, attackY), MoveType.Attack));
+                }
             }
 
-            return moves;
+            return ret;
         }
     }
 
@@ -112,10 +172,18 @@ namespace Chess.Model
             }
         }
 
-        public override List<Move> GetAvailableMoves()
+        public override List<Move> GetAvailableMoves(GameBoard board)
         {
             List<Move> moves = new List<Move>();
 
+            moves.AddRange(GetMovesInLine(board, 1, 0, 1));
+            moves.AddRange(GetMovesInLine(board, -1, 0, 1));
+            moves.AddRange(GetMovesInLine(board, 0, 1, 1));
+            moves.AddRange(GetMovesInLine(board, 0, -1, 1));
+            moves.AddRange(GetMovesInLine(board, 1, 1, 1));
+            moves.AddRange(GetMovesInLine(board, 1, -1, 1));
+            moves.AddRange(GetMovesInLine(board, -1, 1, 1));
+            moves.AddRange(GetMovesInLine(board, -1, -1, 1));
 
             return moves;
         }
@@ -136,9 +204,20 @@ namespace Chess.Model
             }
         }
 
-        public override List<Move> GetAvailableMoves()
+        public override List<Move> GetAvailableMoves(GameBoard board)
         {
-            throw new NotImplementedException();
+            List<Move> moves = new List<Move>();
+
+            moves.AddRange(GetMovesInLine(board, 1, 0));
+            moves.AddRange(GetMovesInLine(board, -1, 0));
+            moves.AddRange(GetMovesInLine(board, 0, 1));
+            moves.AddRange(GetMovesInLine(board, 0, -1));
+            moves.AddRange(GetMovesInLine(board, 1, 1));
+            moves.AddRange(GetMovesInLine(board, 1, -1));
+            moves.AddRange(GetMovesInLine(board, -1, 1));
+            moves.AddRange(GetMovesInLine(board, -1, -1));
+
+            return moves;
         }
     }
 
@@ -157,9 +236,16 @@ namespace Chess.Model
             }
         }
 
-        public override List<Move> GetAvailableMoves()
+        public override List<Move> GetAvailableMoves(GameBoard board)
         {
-            throw new NotImplementedException();
+            List<Move> moves = new List<Move>();
+
+            moves.AddRange(GetMovesInLine(board, 1, 0));
+            moves.AddRange(GetMovesInLine(board, -1, 0));
+            moves.AddRange(GetMovesInLine(board, 0, 1));
+            moves.AddRange(GetMovesInLine(board, 0, -1));
+  
+            return moves;
         }
     }
 
@@ -178,9 +264,40 @@ namespace Chess.Model
             }
         }
 
-        public override List<Move> GetAvailableMoves()
+        public override List<Move> GetAvailableMoves(GameBoard board)
         {
-            throw new NotImplementedException();
+            List<Move> ret = new List<Move>();
+            List<PiecePosition> posList = new List<PiecePosition>();
+            PiecePosition origin = Position;
+
+
+            posList.Add(new PiecePosition(origin.X + 2, origin.Y + 1));
+            posList.Add(new PiecePosition(origin.X + 2, origin.Y - 1));
+
+            posList.Add(new PiecePosition(origin.X - 2, origin.Y + 1));
+            posList.Add(new PiecePosition(origin.X - 2, origin.Y - 1));
+
+            posList.Add(new PiecePosition(origin.X + 1, origin.Y + 2));
+            posList.Add(new PiecePosition(origin.X + 1, origin.Y - 2));
+
+            posList.Add(new PiecePosition(origin.X - 1, origin.Y + 2));
+            posList.Add(new PiecePosition(origin.X - 1, origin.Y - 2));
+
+            foreach (var p in posList)
+            {
+                if (!GameBoard.IsInBoard(p.X, p.Y))
+                    continue;
+
+                Square sq = board[p.X, p.Y];
+                if(sq.Piece == null) {
+                    ret.Add(new Move(p, MoveType.Move));
+
+                } else if(sq.Piece.Color != Color) {
+                    ret.Add(new Move(p, MoveType.Attack));
+                }
+            }
+
+            return ret;
         }
     }
 
@@ -199,9 +316,16 @@ namespace Chess.Model
             }
         }
 
-        public override List<Move> GetAvailableMoves()
+        public override List<Move> GetAvailableMoves(GameBoard board)
         {
-            throw new NotImplementedException();
+            List<Move> moves = new List<Move>();
+
+            moves.AddRange(GetMovesInLine(board, 1, 1));
+            moves.AddRange(GetMovesInLine(board, 1, -1));
+            moves.AddRange(GetMovesInLine(board, -1, 1));
+            moves.AddRange(GetMovesInLine(board, -1, -1));
+
+            return moves;
         }
     }
 }

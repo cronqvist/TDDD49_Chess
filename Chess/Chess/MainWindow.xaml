@@ -12,7 +12,7 @@
         <Converters:SquareBackgroundValueConverter x:Key="SquareBackgroundValueConverter" />
     </Window.Resources>
     <StackPanel>
-        <ItemsControl ItemsSource="{Binding GameEngine.Board, Converter={StaticResource SquareValueConverter}}">
+        <ItemsControl ItemsSource="{Binding GameEngine.Board.Board, Converter={StaticResource SquareValueConverter}}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>
@@ -31,8 +31,8 @@
                                 <Grid Height="80" Width="80" Background="{Binding Background, Converter={StaticResource SquareBackgroundValueConverter}}">
                                     <Grid.InputBindings>
                                         <MouseBinding MouseAction="LeftClick" 
-                                                      Command="{Binding DataContext.SquarePressed, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
-                                                      CommandParameter="{Binding}" />
+                							Command="{Binding DataContext.SquarePressed, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                							CommandParameter="{Binding}" />
                                     </Grid.InputBindings>
                                     <Image Source="{Binding Piece.Filename}" />
                                     <Label Content="{Binding Piece.Position}" />

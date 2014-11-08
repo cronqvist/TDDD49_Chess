@@ -13,9 +13,9 @@ namespace Chess.Converters
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var squares = (Square[][])value;
+            var squares = (Square[,])value;
 
-            squares.Reverse();
+            //squares.Reverse();
 
             Square[][] temp = new Square[8][];
             for (int i = 0; i < 8; i++)
@@ -27,7 +27,7 @@ namespace Chess.Converters
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    temp[j][i] = squares[j][7 - i];
+                    temp[j][i] = squares[j,7 - i];
                 }
             }
 
