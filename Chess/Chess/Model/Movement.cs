@@ -16,6 +16,13 @@ namespace Chess.Model
         }
     }
 
+    public class MovementNormal : Movement
+    {
+        public MovementNormal(PiecePosition pos)
+            : base(pos)
+        {}
+    }
+
     public class MovementVector : Movement
     {
         public MovementVector(PiecePosition pos)

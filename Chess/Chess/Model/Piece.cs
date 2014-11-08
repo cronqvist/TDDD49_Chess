@@ -117,6 +117,17 @@ namespace Chess.Model
         {
             List<Movement> moves = new List<Movement>();
 
+            moves.Add(new MovementNormal(new PiecePosition(Position.X - 1, Position.Y)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X - 1, Position.Y - 1)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X - 1, Position.Y + 1)));
+
+            moves.Add(new MovementNormal(new PiecePosition(Position.X + 1, Position.Y)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X + 1, Position.Y - 1)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X + 1, Position.Y + 1)));
+
+            moves.Add(new MovementNormal(new PiecePosition(Position.X, Position.Y - 1)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X, Position.Y + 1)));
+
 
             return moves;
         }

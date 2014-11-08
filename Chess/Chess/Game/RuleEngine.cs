@@ -33,6 +33,20 @@ namespace Chess.Game
                         moves.Add(new Move(pos.Position, MoveType.Move));
                     }
                 }
+                else if (pos is MovementNormal)
+                {
+                    if (isInside(pos.Position))
+                    {
+                        if (isEmpty(pos.Position))
+                        {
+                            moves.Add(new Move(pos.Position, MoveType.Move));
+                        }
+                        else if (isEnemy(piece, pos.Position))
+                        {
+                            moves.Add(new Move(pos.Position, MoveType.Attack));
+                        }
+                    }
+                }
                 else if (pos is MovementVector)
                 {
 
