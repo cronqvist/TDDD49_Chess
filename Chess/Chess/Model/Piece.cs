@@ -122,13 +122,13 @@ namespace Chess.Model
                     break;
 
                 if (curSquare.Piece == null)
-                {
+            {
                     ret.Add(new Move(new PiecePosition(pos.X, row), MoveType.Move));
-                }
-                else
-                {
+            }
+            else
+            {
                     break;
-                }
+            }
             }
 
             int attackY = pos.Y + dir;
@@ -150,8 +150,8 @@ namespace Chess.Model
                 if (other != null && other.Color != Color)
                 {
                     ret.Add(new Move(new PiecePosition(attackX2, attackY), MoveType.Attack));
-                }
-            }
+        }
+    }
 
             return ret;
         }

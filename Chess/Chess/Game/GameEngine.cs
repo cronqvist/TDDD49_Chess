@@ -48,8 +48,8 @@ namespace Chess.Game
                 {
                     SquareBackground bg = move.Type == MoveType.Move ? SquareBackground.Move : SquareBackground.Attacked;
                     Board.SetBackgroundAt(move.Position.X, move.Position.Y, bg );
-                }
-            }
+                    }
+                    }
             else if (square.Background != square.OriginalBackground) // if one of the moves was pressed
             {
                 // valid square was pressed for move
