@@ -48,6 +48,8 @@ namespace Chess.Model
             Position = pos;
         }
 
+        public virtual bool IsKing() { return false; }
+
         protected List<Move> GetMovesInLine(GameBoard board, int dirX, int dirY, int steps=8)
         {
             List<Move> ret = new List<Move>();
@@ -122,13 +124,13 @@ namespace Chess.Model
                     break;
 
                 if (curSquare.Piece == null)
-            {
+                {
                     ret.Add(new Move(new PiecePosition(pos.X, row), MoveType.Move));
-            }
-            else
-            {
+                }
+                else
+                {
                     break;
-            }
+                }
             }
 
             int attackY = pos.Y + dir;
@@ -170,6 +172,11 @@ namespace Chess.Model
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/bK.png";
             }
+        }
+
+        public override bool IsKing()
+        {
+            return true;
         }
 
         public override List<Move> GetAvailableMoves(GameBoard board)

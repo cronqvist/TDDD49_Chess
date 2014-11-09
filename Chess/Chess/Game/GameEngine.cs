@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows;
 
 namespace Chess.Game
 {
@@ -43,13 +44,13 @@ namespace Chess.Game
                     ResetBackgrounds(moves);
                 }
 
-                moves = piece.GetAvailableMoves(_board); // gets the new moves for the current piece
+                moves = ruleEngine.GetAvailableMoves(piece); // gets the new moves for the current piece
                 foreach (var move in moves)
                 {
                     SquareBackground bg = move.Type == MoveType.Move ? SquareBackground.Move : SquareBackground.Attacked;
                     Board.SetBackgroundAt(move.Position.X, move.Position.Y, bg );
-                    }
-                    }
+                }
+            }
             else if (square.Background != square.OriginalBackground) // if one of the moves was pressed
             {
                 // valid square was pressed for move
@@ -60,6 +61,13 @@ namespace Chess.Game
                         selectedSquare.Piece.Position = new PiecePosition(move.Position.X, move.Position.Y);
                         Board[move.Position.X,move.Position.Y].Piece = selectedSquare.Piece; //TODO: Play som fancy animation
                         selectedSquare.Piece = null;
+
+                        Player p = Turn == Player.White ? Player.Black : Player.White;
+                        if (ruleEngine.IsCheck(p))
+                        {
+                            MessageBox.Show("lol check!", "lol");
+                        }
+
                         break;
                     }
                 }
