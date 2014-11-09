@@ -62,7 +62,7 @@ namespace Chess.Model
                 if (sq.Piece == null)
                 {
                     ret.Add(new Move(curPos, MoveType.Move));
-                }
+    }
                 else if (sq.Piece.Color != Color)
                 {
                     ret.Add(new Move(curPos, MoveType.Attack));
@@ -141,7 +141,7 @@ namespace Chess.Model
                 if (other != null && other.Color != Color) 
                 {
                     ret.Add(new Move(new PiecePosition(attackX1, attackY), MoveType.Attack));
-                }
+            }
             }
 
             if (GameBoard.IsInBoard(attackX2, attackY))
@@ -174,6 +174,19 @@ namespace Chess.Model
 
         public override List<Move> GetAvailableMoves(GameBoard board)
         {
+           /* List<Movement> moves = new List<Movement>();
+
+            moves.Add(new MovementNormal(new PiecePosition(Position.X - 1, Position.Y)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X - 1, Position.Y - 1)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X - 1, Position.Y + 1)));
+
+            moves.Add(new MovementNormal(new PiecePosition(Position.X + 1, Position.Y)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X + 1, Position.Y - 1)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X + 1, Position.Y + 1)));
+
+            moves.Add(new MovementNormal(new PiecePosition(Position.X, Position.Y - 1)));
+            moves.Add(new MovementNormal(new PiecePosition(Position.X, Position.Y + 1)));*/
+
             List<Move> moves = new List<Move>();
 
             moves.AddRange(GetMovesInLine(board, 1, 0, 1));
@@ -284,7 +297,7 @@ namespace Chess.Model
             posList.Add(new PiecePosition(origin.X - 1, origin.Y - 2));
 
             foreach (var p in posList)
-            {
+        {
                 if (!GameBoard.IsInBoard(p.X, p.Y))
                     continue;
 

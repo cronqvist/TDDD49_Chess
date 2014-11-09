@@ -10,10 +10,10 @@ namespace Chess.Game
 {
     public class GameEngine
     {
-      
+
         //public Square[][] Board { get; private set; }
 
-        
+
         private GameBoard _board;
         private RuleEngine ruleEngine;
         private List<Move> moves;
@@ -71,11 +71,11 @@ namespace Chess.Game
             }
         }
 
- 
+
         private void SwapTurn()
-        {
+                {
             Turn = Turn == Player.White ? Player.Black : Player.White;
-        }
+            }
 
         private void ResetBackgrounds(List<Move> moves)
         {
