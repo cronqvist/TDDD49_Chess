@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
+﻿using System.ComponentModel;
 
 namespace Chess.Model
 {
@@ -19,16 +13,28 @@ namespace Chess.Model
     public class Square : INotifyPropertyChanged
     {
         #region property changed
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         public void OnPropertyChanged(string p)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(p));
         }
+
         #endregion property changed
 
+        private SquareBackground _background;
         private Piece _piece;
+
+        public Square(SquareBackground bg)
+        {
+            Background = bg;
+
+            OriginalBackground = bg;
+        }
+
         public Piece Piece
         {
             get { return _piece; }
@@ -39,7 +45,6 @@ namespace Chess.Model
             }
         }
 
-        private SquareBackground _background;
         public SquareBackground Background
         {
             get { return _background; }
@@ -51,13 +56,6 @@ namespace Chess.Model
         }
 
         public SquareBackground OriginalBackground { get; private set; }
-
-        public Square(SquareBackground bg)
-        {
-            Background = bg;
-
-            OriginalBackground = bg;
-        }
 
         public void ResetBackground()
         {

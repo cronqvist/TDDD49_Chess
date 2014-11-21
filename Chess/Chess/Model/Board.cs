@@ -1,14 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Chess.Model
 {
     public class GameBoard
     {
-        private Square[,] _board;
+        private readonly Square[,] _board;
+
+        public GameBoard()
+        {
+            _board = new Square[8, 8];
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((j - i + 1)%2 == 0)
+                        _board[i, j] = new Square(SquareBackground.White);
+                    else
+                        _board[i, j] = new Square(SquareBackground.Black);
+                }
+            }
+
+            WhitePieces = BuildPieces(Player.White);
+            BlackPieces = BuildPieces(Player.Black);
+        }
+
         /*private List<Piece> _whitePieces;
         private List<Piece> _blackPieces;*/
 
@@ -17,10 +33,7 @@ namespace Chess.Model
 
         public Square this[int x, int y]
         {
-            get
-            {
-                return _board[x, y];
-            }
+            get { return _board[x, y]; }
         }
 
         public Square[,] Board
@@ -28,32 +41,15 @@ namespace Chess.Model
             get { return _board; }
         }
 
-        public GameBoard()
+
+        public void SetBackgroundAt(int x, int y, SquareBackground bg)
         {
-            _board = new Square[8,8];
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((j - i + 1) % 2 == 0)
-                        _board[i,j] = new Square(SquareBackground.White);
-                    else
-                        _board[i,j] = new Square(SquareBackground.Black);
-                }
-            }
-
-            WhitePieces = BuildPieces(Player.White);
-            BlackPieces = BuildPieces(Player.Black);
-        }
-
-
-        public void SetBackgroundAt(int x, int y, SquareBackground bg) {
             _board[x, y].Background = bg;
         }
 
-        private List<Piece> BuildPieces(Player c) {
-            List<Piece> ret = new List<Piece>();
+        private List<Piece> BuildPieces(Player c)
+        {
+            var ret = new List<Piece>();
             int pawnRow;
             int royalRow;
 
@@ -70,7 +66,7 @@ namespace Chess.Model
 
             ret.Add(_board[0, royalRow].Piece = new Rook(c, new PiecePosition(0, royalRow)));
             ret.Add(_board[1, royalRow].Piece = new Knight(c, new PiecePosition(1, royalRow)));
-            ret.Add( _board[2, royalRow].Piece = new Bishop(c, new PiecePosition(2, royalRow)));
+            ret.Add(_board[2, royalRow].Piece = new Bishop(c, new PiecePosition(2, royalRow)));
             ret.Add(_board[3, royalRow].Piece = new Queen(c, new PiecePosition(3, royalRow)));
             ret.Add(_board[4, royalRow].Piece = new King(c, new PiecePosition(4, royalRow)));
             ret.Add(_board[5, royalRow].Piece = new Bishop(c, new PiecePosition(5, royalRow)));
@@ -93,7 +89,5 @@ namespace Chess.Model
         {
             return (x >= 0 && x < 8) && (y >= 0 && y < 8);
         }
-
- 
     }
 }

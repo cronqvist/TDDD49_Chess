@@ -1,69 +1,68 @@
-﻿using Chess.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
+﻿using System.Collections.Generic;
 using System.Windows;
+using Chess.Model;
 
 namespace Chess.Game
 {
     public class GameEngine
     {
-
         //public Square[][] Board { get; private set; }
 
 
-        private GameBoard _board;
-        private RuleEngine ruleEngine;
-        private List<Move> moves;
-        private Square selectedSquare;
-
-        public GameBoard Board { get {return _board;} }
-        public Player Turn { get; private set; }
-
+        private readonly GameBoard _board;
+        private readonly RuleEngine _ruleEngine;
+        private List<Move> _moves;
+        private Square _selectedSquare;
 
         public GameEngine()
         {
             Turn = Player.White;
             _board = new GameBoard();
-            ruleEngine = new RuleEngine(Board);
+            _ruleEngine = new RuleEngine(Board);
         }
+
+        public GameBoard Board
+        {
+            get { return _board; }
+        }
+
+        public Player Turn { get; private set; }
+
 
         public void HandleInput(Square square)
         {
-            var piece = square.Piece;
+            Piece piece = square.Piece;
 
             if (piece != null && piece.Color == Turn) // a piece of correct turn was pressed
             {
-                selectedSquare = square;
+                _selectedSquare = square;
 
-                if (moves != null) // if there already are moves, reset them
+                if (_moves != null) // if there already are moves, reset them
                 {
-                    ResetBackgrounds(moves);
+                    ResetBackgrounds(_moves);
                 }
 
-                moves = ruleEngine.GetAvailableMoves(piece); // gets the new moves for the current piece
-                foreach (var move in moves)
+                _moves = _ruleEngine.GetAvailableMoves(piece); // gets the new moves for the current piece
+                foreach (Move move in _moves)
                 {
                     SquareBackground bg = move.Type == MoveType.Move ? SquareBackground.Move : SquareBackground.Attacked;
-                    Board.SetBackgroundAt(move.Position.X, move.Position.Y, bg );
+                    Board.SetBackgroundAt(move.Position.X, move.Position.Y, bg);
                 }
             }
             else if (square.Background != square.OriginalBackground) // if one of the moves was pressed
             {
                 // valid square was pressed for move
-                foreach (var move in moves)
+                foreach (Move move in _moves)
                 {
                     if (Board[move.Position.X, move.Position.Y] == square) // find the move
                     {
-                        selectedSquare.Piece.Position = new PiecePosition(move.Position.X, move.Position.Y);
-                        Board[move.Position.X,move.Position.Y].Piece = selectedSquare.Piece; //TODO: Play som fancy animation
-                        selectedSquare.Piece = null;
+                        _selectedSquare.Piece.Position = new PiecePosition(move.Position.X, move.Position.Y);
+                        Board[move.Position.X, move.Position.Y].Piece = _selectedSquare.Piece;
+                            //TODO: Play som fancy animation
+                        _selectedSquare.Piece = null;
 
                         Player p = Turn == Player.White ? Player.Black : Player.White;
-                        if (ruleEngine.IsCheck(p))
+                        if (_ruleEngine.IsCheck(p))
                         {
                             MessageBox.Show("lol check!", "lol");
                         }
@@ -73,23 +72,23 @@ namespace Chess.Game
                 }
 
                 SwapTurn();
-                ResetBackgrounds(moves);
-                selectedSquare = null;
-                moves = null;
+                ResetBackgrounds(_moves);
+                _selectedSquare = null;
+                _moves = null;
             }
         }
 
 
         private void SwapTurn()
-                {
+        {
             Turn = Turn == Player.White ? Player.Black : Player.White;
-            }
+        }
 
-        private void ResetBackgrounds(List<Move> moves)
+        private void ResetBackgrounds(IEnumerable<Move> moves)
         {
             foreach (var move in moves)
             {
-                Board[move.Position.X,move.Position.Y].ResetBackground();
+                Board[move.Position.X, move.Position.Y].ResetBackground();
             }
         }
     }
