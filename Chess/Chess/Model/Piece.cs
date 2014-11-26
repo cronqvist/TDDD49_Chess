@@ -88,13 +88,9 @@ namespace Chess.Model
 
     public class Pawn : Piece
     {
-        private PiecePosition _startPosition;
-
         public Pawn(Player color, PiecePosition pos)
             : base(color, pos)
         {
-            _startPosition = pos;
-
             if (color == Player.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wP.png";

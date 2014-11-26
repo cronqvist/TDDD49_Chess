@@ -21,8 +21,8 @@ namespace Chess.Model
                 }
             }
 
-            WhitePieces = BuildPieces(Player.White);
-            BlackPieces = BuildPieces(Player.Black);
+            WhitePieces = buildPieces(Player.White);
+            BlackPieces = buildPieces(Player.Black);
         }
 
         /*private List<Piece> _whitePieces;
@@ -47,7 +47,7 @@ namespace Chess.Model
             _board[x, y].Background = bg;
         }
 
-        private List<Piece> BuildPieces(Player c)
+        private List<Piece> buildPieces(Player c)
         {
             var ret = new List<Piece>();
             int pawnRow;
