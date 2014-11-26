@@ -9,7 +9,7 @@ namespace Chess.ViewModels
     {
         public MainViewModel()
         {
-            SquarePressed = new SimpleCommand(ExecuteSquarePressed, CanExecuteSquarePressed);
+            SquarePressed = new SimpleCommand(executeSquarePressed, CanExecuteSquarePressed);
 
             GameEngine = new GameEngine();
         }
@@ -25,7 +25,7 @@ namespace Chess.ViewModels
             return true;
         }
 
-        private void ExecuteSquarePressed(object parameter)
+        private void executeSquarePressed(object parameter)
         {
             var square = parameter as Square;
 

@@ -14,13 +14,11 @@ namespace Chess.Game
 
         public List<Move> GetAvailableMoves(Piece piece)
         {
-            var ret = new List<Move>();
-
             List<Move> potentialMoves = piece.GetAvailableMoves(_board);
 
             //TODO: Check for "self check" 
 
-            ret = potentialMoves;
+            List<Move> ret = potentialMoves;
 
             return ret;
         }

@@ -39,7 +39,7 @@ namespace Chess.Game
 
                 if (_moves != null) // if there already are moves, reset them
                 {
-                    ResetBackgrounds(_moves);
+                    resetBackgrounds(_moves);
                 }
 
                 _moves = _ruleEngine.GetAvailableMoves(piece); // gets the new moves for the current piece
@@ -71,20 +71,20 @@ namespace Chess.Game
                     }
                 }
 
-                SwapTurn();
-                ResetBackgrounds(_moves);
+                swapTurn();
+                resetBackgrounds(_moves);
                 _selectedSquare = null;
                 _moves = null;
             }
         }
 
 
-        private void SwapTurn()
+        private void swapTurn()
         {
             Turn = Turn == Player.White ? Player.Black : Player.White;
         }
 
-        private void ResetBackgrounds(IEnumerable<Move> moves)
+        private void resetBackgrounds(IEnumerable<Move> moves)
         {
             foreach (var move in moves)
             {
