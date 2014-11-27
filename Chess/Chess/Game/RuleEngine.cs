@@ -1,15 +1,12 @@
-﻿using Chess.Model;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Chess.Model;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chess.Game
 {
     public class RuleEngine
     {
-        private GameBoard _board;
+        private readonly GameBoard _board;
 
         public RuleEngine(GameBoard board)
         {
@@ -89,21 +86,21 @@ namespace Chess.Game
                 
                 if(!GameBoard.IsInBoard(nPos.X, nPos.Y)) 
                     break;
-                
+
                 Piece otherPiece = _board.GetPieceAt(nPos.X, nPos.Y);
 
                 if (otherPiece != null) 
-                {
+            {
 
                     if (otherPiece.Color == myColor)
                         return false;
 
                     List<Move> moves = otherPiece.GetAvailableMoves(_board);
                     foreach (var move in moves)
-                    {
+                {
                         if (move.Type == MoveType.Attack && move.Position == pos)
                             return true;
-                    }
+                }
 
                     return false;
                 }
@@ -136,6 +133,5 @@ namespace Chess.Game
 
             return false;
         }
-
     }
 }

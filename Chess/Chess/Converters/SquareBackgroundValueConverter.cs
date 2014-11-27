@@ -1,42 +1,38 @@
-﻿using Chess.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
+using Chess.Model;
 
 namespace Chess.Converters
 {
     public class SquareBackgroundValueConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            SquareBackground bg = (SquareBackground)value;
-            SolidColorBrush brush = new SolidColorBrush();
+            var bg = (SquareBackground) value;
+            var brush = new SolidColorBrush();
 
-            if (bg == SquareBackground.Attacked)
+            switch (bg)
             {
-                brush.Color = Colors.Red;
-            }
-            else if (bg == SquareBackground.Black)
-            {
-                brush.Color = Colors.LightGray;
-            }
-            else if (bg == SquareBackground.Move)
-            {
-                brush.Color = Colors.LightGreen;
-            }
-            else
-            {
-                brush.Color = Colors.White;
+                case SquareBackground.Attacked:
+                    brush.Color = Colors.Red;
+                    break;
+                case SquareBackground.Black:
+                    brush.Color = Colors.LightGray;
+                    break;
+                case SquareBackground.Move:
+                    brush.Color = Colors.LightGreen;
+                    break;
+                default:
+                    brush.Color = Colors.White;
+                    break;
             }
 
             return brush;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

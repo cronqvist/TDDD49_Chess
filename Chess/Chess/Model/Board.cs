@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Chess.Model
 {
     public class GameBoard
     {
-        private Square[,] _board;
-        /*private List<Piece> _whitePieces;
-        private List<Piece> _blackPieces;*/
-
+        private readonly Square[,] _board;
         public King BlackKing { get; private set; }
         public King WhiteKing { get; private set; }
 
@@ -21,39 +15,79 @@ namespace Chess.Model
         public List<Knight> WhiteKnights { get; private set; }
         public List<Knight> BlackKnights { get; private set; }
 
-        public Square this[int x, int y]
-        {
-            get
-            {
-                return _board[x, y];
-            }
-        }
-
-        public Square[,] Board
-        {
-            get { return _board; }
-        }
-
         public GameBoard()
         {
-            _board = new Square[8,8];
+            _board = new Square[8, 8];
+       
 
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if ((j - i + 1) % 2 == 0)
-                        _board[i,j] = new Square(SquareBackground.White);
+                    if ((j - i + 1)%2 == 0)
+                        _board[i, j] = new Square(SquareBackground.White);
                     else
-                        _board[i,j] = new Square(SquareBackground.Black);
+                        _board[i, j] = new Square(SquareBackground.Black);
                 }
             }
 
-            BlackKnights = new List<Knight>();
-            WhiteKnights = new List<Knight>();
+            BlackPieces = new List<Piece>();
+            WhitePieces = new List<Piece>();
 
-            WhitePieces = BuildPieces(Player.White);
-            BlackPieces = BuildPieces(Player.Black);
+            WhiteKnights = new List<Knight>();
+            BlackKnights= new List<Knight>();
+
+            BuildStartPieces();
+        }
+
+        public void BuildStartPieces()
+        {
+            WhitePieces = buildPieces(Player.White);
+            BlackPieces = buildPieces(Player.Black);
+        }
+
+        public void SetBoard(List<Piece> pieces)
+        {
+            ClearBoard();
+
+            foreach (var piece in pieces)
+            {
+                _board[piece.Position.X, piece.Position.Y].Piece = piece;
+
+                if (piece.Color == Player.Black)
+                {
+                    BlackPieces.Add(piece);
+                }
+                else
+                {
+                    WhitePieces.Add(piece);
+                }
+            }
+        }
+
+        public void ClearBoard()
+        {
+            WhitePieces.Clear();
+            BlackPieces.Clear();
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    _board[i, j].Piece = null;
+                }
+            }
+        }
+
+
+        public Square this[int x, int y]
+        {
+            get { return _board[x, y]; }
+        }
+
+        public Square[,] Board
+        {
+            get { return _board; }
         }
 
         public GameBoard(GameBoard other)
@@ -77,12 +111,14 @@ namespace Chess.Model
         }
 
 
-        public void SetBackgroundAt(int x, int y, SquareBackground bg) {
+        public void SetBackgroundAt(int x, int y, SquareBackground bg)
+        {
             _board[x, y].Background = bg;
         }
 
-        private List<Piece> BuildPieces(Player c) {
-            List<Piece> ret = new List<Piece>();
+        private List<Piece> buildPieces(Player c)
+        {
+            var ret = new List<Piece>();
             int pawnRow;
             int royalRow;
 
@@ -139,7 +175,5 @@ namespace Chess.Model
         {
             return (x >= 0 && x < 8) && (y >= 0 && y < 8);
         }
-
- 
     }
 }
