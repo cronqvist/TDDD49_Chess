@@ -11,9 +11,9 @@ namespace Chess.Game
         //public Square[][] Board { get; private set; }
 
         private readonly XmlExport _xmlExport;
-        private readonly String _xmlFilename;
+        private const String XmlFilename = "Game.xml";
 
-        private readonly GameBoard _board;
+        private GameBoard _board;
         private readonly RuleEngine _ruleEngine;
         private List<Move> _moves;
         private Square _selectedSquare;
@@ -26,19 +26,25 @@ namespace Chess.Game
             _board = new GameBoard();
             _ruleEngine = new RuleEngine(Board);
 
-            _xmlFilename = "Game.xml";
             _xmlExport = new XmlExport(this);
 
-            if (File.Exists(_xmlFilename))
+            if (File.Exists(XmlFilename))
             {
-                _xmlExport.UpdateBoard(_xmlFilename, this); // load last session
+                _xmlExport.UpdateBoard(XmlFilename, this); // load last session
             }
             else
             {
-                _xmlExport.Export(_xmlFilename); // create a new xml document
+                _xmlExport.Export(XmlFilename); // create a new xml document
             }
 
             fileSystemWatcherinit(); // watch for changes in xml file
+        }
+
+        public void NewGame()
+        {
+            this.Turn = Player.White;
+            _board.BuildStartPieces();
+            _xmlExport.Export(XmlFilename);
         }
 
         private void fileSystemWatcherinit()
@@ -46,14 +52,14 @@ namespace Chess.Game
             _fileSystemWatcher = new FileSystemWatcher();
             _fileSystemWatcher.Path = Directory.GetCurrentDirectory();
             _fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite;
-            _fileSystemWatcher.Filter = _xmlFilename;
+            _fileSystemWatcher.Filter = XmlFilename;
             _fileSystemWatcher.Changed += fileChanged;
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
         private void fileChanged(object sender, FileSystemEventArgs e)
         {
-            _xmlExport.UpdateBoard(_xmlFilename, this);  // load new file
+            _xmlExport.UpdateBoard(XmlFilename, this);  // load new file
         }
 
         public GameBoard Board
@@ -109,7 +115,11 @@ namespace Chess.Game
                
                 swapTurn();
                 resetBackgrounds(_moves);
-                _xmlExport.Export(_xmlFilename);
+
+                _fileSystemWatcher.EnableRaisingEvents = false;
+                _xmlExport.Export(XmlFilename);
+                _fileSystemWatcher.EnableRaisingEvents = true;
+
                 _selectedSquare = null;
                 _moves = null;
             }

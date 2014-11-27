@@ -22,13 +22,18 @@ namespace Chess.Model
                 }
             }
 
+            BuildStartPieces();
+        }
+
+        public void BuildStartPieces()
+        {
             WhitePieces = buildPieces(Player.White);
             BlackPieces = buildPieces(Player.Black);
         }
 
         public void SetBoard(List<Piece> pieces)
         {
-            clearBoard();
+            ClearBoard();
 
             foreach (var piece in pieces)
             {
@@ -45,7 +50,7 @@ namespace Chess.Model
             }
         }
 
-        private void clearBoard()
+        public void ClearBoard()
         {
             WhitePieces.Clear();
             BlackPieces.Clear();
