@@ -41,7 +41,7 @@ namespace Chess.Game
                 _xmlExport.Export(_xmlFilename); // create a new xml document
             }
 
-            fileSystemWatcherinit();
+            fileSystemWatcherinit(); // watch for changes in xml file
         }
 
         private void fileSystemWatcherinit()
