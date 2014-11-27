@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Windows;
-using System.Xml.Linq;
 using Chess.Model;
 
 namespace Chess.Game
