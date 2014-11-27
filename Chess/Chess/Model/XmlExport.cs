@@ -25,7 +25,7 @@ namespace Chess.Model
             {
                  doc = XDocument.Load(filename);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //something wrong with xml file lol fix it
                 return;
