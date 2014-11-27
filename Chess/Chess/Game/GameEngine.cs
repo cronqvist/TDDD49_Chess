@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Windows;
+using System.Xml.Linq;
 using Chess.Model;
 
 namespace Chess.Game
@@ -8,17 +13,50 @@ namespace Chess.Game
     {
         //public Square[][] Board { get; private set; }
 
+        private readonly XmlExport _xmlExport;
+        private readonly String _xmlFilename;
 
         private readonly GameBoard _board;
         private readonly RuleEngine _ruleEngine;
         private List<Move> _moves;
         private Square _selectedSquare;
 
+        private FileSystemWatcher _fileSystemWatcher;
+
         public GameEngine()
         {
             Turn = Player.White;
             _board = new GameBoard();
             _ruleEngine = new RuleEngine(Board);
+
+            _xmlFilename = "Game.xml";
+            _xmlExport = new XmlExport(this);
+
+            if (File.Exists(_xmlFilename))
+            {
+                _xmlExport.UpdateBoard(_xmlFilename, this); // load last session
+            }
+            else
+            {
+                _xmlExport.Export(_xmlFilename); // create a new xml document
+            }
+
+            fileSystemWatcherinit();
+        }
+
+        private void fileSystemWatcherinit()
+        {
+            _fileSystemWatcher = new FileSystemWatcher();
+            _fileSystemWatcher.Path = Directory.GetCurrentDirectory();
+            _fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            _fileSystemWatcher.Filter = _xmlFilename;
+            _fileSystemWatcher.Changed += fileChanged;
+            _fileSystemWatcher.EnableRaisingEvents = true;
+        }
+
+        private void fileChanged(object sender, FileSystemEventArgs e)
+        {
+            _xmlExport.UpdateBoard(_xmlFilename, this);  // load new file
         }
 
         public GameBoard Board
@@ -26,7 +64,7 @@ namespace Chess.Game
             get { return _board; }
         }
 
-        public Player Turn { get; private set; }
+        public Player Turn { get; set; }
 
 
         public void HandleInput(Square square)
@@ -71,8 +109,10 @@ namespace Chess.Game
                     }
                 }
 
+               
                 swapTurn();
                 resetBackgrounds(_moves);
+                _xmlExport.Export(_xmlFilename);
                 _selectedSquare = null;
                 _moves = null;
             }

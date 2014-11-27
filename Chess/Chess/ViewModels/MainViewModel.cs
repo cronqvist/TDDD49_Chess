@@ -1,4 +1,9 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Xml;
+using System.Xml.Linq;
 using Chess.Game;
 using Chess.Model;
 using Command;

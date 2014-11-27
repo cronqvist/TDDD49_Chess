@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Chess.Model
 {
@@ -23,6 +24,39 @@ namespace Chess.Model
 
             WhitePieces = buildPieces(Player.White);
             BlackPieces = buildPieces(Player.Black);
+        }
+
+        public void SetBoard(List<Piece> pieces)
+        {
+            clearBoard();
+
+            foreach (var piece in pieces)
+            {
+                _board[piece.Position.X, piece.Position.Y].Piece = piece;
+
+                if (piece.Color == Player.Black)
+                {
+                    BlackPieces.Add(piece);
+                }
+                else
+                {
+                    WhitePieces.Add(piece);
+                }
+            }
+        }
+
+        private void clearBoard()
+        {
+            WhitePieces.Clear();
+            BlackPieces.Clear();
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    _board[i, j].Piece = null;
+                }
+            }
         }
 
         /*private List<Piece> _whitePieces;
