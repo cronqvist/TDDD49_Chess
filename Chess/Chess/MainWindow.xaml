@@ -42,7 +42,6 @@
                                                       CommandParameter="{Binding}" />
                                     </Grid.InputBindings>
                                     <Image Source="{Binding Piece.Filename}" />
-                                    <Label Content="{Binding Piece.Position}" />
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

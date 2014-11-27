@@ -18,13 +18,13 @@ namespace Chess.Model
         public GameBoard()
         {
             _board = new Square[8, 8];
-       
+
 
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if ((j - i + 1)%2 == 0)
+                    if ((j - i + 1) % 2 == 0)
                         _board[i, j] = new Square(SquareBackground.White);
                     else
                         _board[i, j] = new Square(SquareBackground.Black);
@@ -38,6 +38,17 @@ namespace Chess.Model
             BlackKnights= new List<Knight>();
 
             BuildStartPieces();
+        }
+
+        public void ResetSquares()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    _board[i, j].ResetBackground();
+                }
+            }
         }
 
         public void BuildStartPieces()

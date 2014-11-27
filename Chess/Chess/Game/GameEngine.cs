@@ -44,6 +44,7 @@ namespace Chess.Game
         {
             this.Turn = Player.White;
             _board.BuildStartPieces();
+            _board.ResetSquares();
             _xmlExport.Export(XmlFilename);
         }
 
