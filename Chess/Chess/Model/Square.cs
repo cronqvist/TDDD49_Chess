@@ -59,6 +59,7 @@ namespace Chess.Model
             OriginalBackground = bg;
         }
 
+ 
         public void ResetBackground()
         {
             Background = OriginalBackground;

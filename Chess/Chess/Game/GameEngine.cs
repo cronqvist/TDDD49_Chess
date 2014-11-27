@@ -81,9 +81,9 @@ namespace Chess.Game
 
 
         private void SwapTurn()
-                {
+        {
             Turn = Turn == Player.White ? Player.Black : Player.White;
-            }
+        }
 
         private void ResetBackgrounds(List<Move> moves)
         {

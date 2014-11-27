@@ -12,8 +12,14 @@ namespace Chess.Model
         /*private List<Piece> _whitePieces;
         private List<Piece> _blackPieces;*/
 
+        public King BlackKing { get; private set; }
+        public King WhiteKing { get; private set; }
+
         public List<Piece> BlackPieces { get; private set; }
         public List<Piece> WhitePieces { get; private set; }
+
+        public List<Knight> WhiteKnights { get; private set; }
+        public List<Knight> BlackKnights { get; private set; }
 
         public Square this[int x, int y]
         {
@@ -43,8 +49,31 @@ namespace Chess.Model
                 }
             }
 
+            BlackKnights = new List<Knight>();
+            WhiteKnights = new List<Knight>();
+
             WhitePieces = BuildPieces(Player.White);
             BlackPieces = BuildPieces(Player.Black);
+        }
+
+        public GameBoard(GameBoard other)
+        {
+           /* for (int i = 0; i < 8; ++i)
+            {
+                for (int j = 0; j < 8; ++j)
+                {
+                    _board[i, j] = new Square(other._board[i, j]);
+                }
+            }
+
+            _board = other._board;
+            BlackKnights = other.BlackKnights;
+            BlackPieces = other.BlackPieces;
+            BlackKing = other.BlackKing;
+
+            WhiteKnights = other.WhiteKnights;
+            WhitePieces = other.WhitePieces;
+            WhiteKing = other.WhiteKing;*/
         }
 
 
@@ -69,13 +98,30 @@ namespace Chess.Model
             }
 
             ret.Add(_board[0, royalRow].Piece = new Rook(c, new PiecePosition(0, royalRow)));
-            ret.Add(_board[1, royalRow].Piece = new Knight(c, new PiecePosition(1, royalRow)));
             ret.Add( _board[2, royalRow].Piece = new Bishop(c, new PiecePosition(2, royalRow)));
             ret.Add(_board[3, royalRow].Piece = new Queen(c, new PiecePosition(3, royalRow)));
-            ret.Add(_board[4, royalRow].Piece = new King(c, new PiecePosition(4, royalRow)));
             ret.Add(_board[5, royalRow].Piece = new Bishop(c, new PiecePosition(5, royalRow)));
-            ret.Add(_board[6, royalRow].Piece = new Knight(c, new PiecePosition(6, royalRow)));
             ret.Add(_board[7, royalRow].Piece = new Rook(c, new PiecePosition(7, royalRow)));
+
+            King king = new King(c, new PiecePosition(4, royalRow));
+            Knight k1 = new Knight(c, new PiecePosition(1, royalRow));
+            Knight k2 = new Knight(c, new PiecePosition(6, royalRow));
+
+            if(c == Player.Black) {
+                this.BlackKing = king;
+                BlackKnights.Add(k1);
+                BlackKnights.Add(k2);
+
+            } else {
+                this.WhiteKing = king;
+                WhiteKnights.Add(k1);
+                WhiteKnights.Add(k2);
+            }
+
+            ret.Add(_board[4, royalRow].Piece = king);
+            ret.Add(_board[1, royalRow].Piece = k1);
+            ret.Add(_board[6, royalRow].Piece = k2);
+
             for (int i = 0; i < 8; i++)
             {
                 ret.Add(_board[i, pawnRow].Piece = new Pawn(c, new PiecePosition(i, pawnRow)));
