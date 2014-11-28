@@ -117,9 +117,9 @@
     <Resource Include="Resources\Pieces\wR.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Command\Command.csproj">
-      <Project>{0e9c660d-0e9f-4825-ba5c-7b7c017a41cf}</Project>
-      <Name>Command</Name>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{e66f4a2e-35f8-420b-b535-5e8f801ac4be}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

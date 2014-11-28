@@ -1,14 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Windows;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Xml;
-using System.Xml.Linq;
 using Chess.Game;
 using Chess.Model;
-using Command;
+using Utilities;
 
 namespace Chess.ViewModels
 {
