@@ -11,6 +11,15 @@ namespace Chess.Model
             OriginalBackground = bg;
         }
 
+        public Square(Square other)
+        {
+            OriginalBackground = other.OriginalBackground;
+            Background = other.Background;
+
+            if (other.Piece != null)
+                _piece = other.Piece.Clone();
+        }
+
         private Piece _piece;
         public Piece Piece
         {

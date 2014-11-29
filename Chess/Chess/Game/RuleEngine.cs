@@ -20,7 +20,7 @@ namespace Chess.Game
             PiecePosition orgPos = piece.Position;
 
             //Check for "self check" 
-            /*foreach (var move in potentialMoves)
+            foreach (var move in potentialMoves)
             {
                 GameBoard newBoard = new GameBoard(_board);
                 King mKing = piece.Color == Player.White ? newBoard.WhiteKing : newBoard.BlackKing;
@@ -31,39 +31,39 @@ namespace Chess.Game
                 endSquare.Piece = startSquare.Piece;
                 startSquare.Piece = null;
 
-                if (!IsThreatened(mKing))
+                if (!IsThreatened(mKing, newBoard))
                     ret.Add(move); 
-            }*/
+            }
 
-            ret = potentialMoves;
+            //ret = potentialMoves;
 
             return ret;
         }
 
-        private bool IsThreatened(Piece p)
+        private bool IsThreatened(Piece p, GameBoard b)
         {
-            bool dirThreat = ThreatInDir(p, 0, 1)   ||
-                             ThreatInDir(p, 0, -1)  ||
-                             ThreatInDir(p, 1, 0)   ||
-                             ThreatInDir(p, -1, 0)  ||
-                             ThreatInDir(p, 1, 1)   ||
-                             ThreatInDir(p, 1, -1)  ||
-                             ThreatInDir(p, -1, 1)  ||
-                             ThreatInDir(p, -1, -1);
+            bool dirThreat = ThreatInDir(p, b, 0, 1) ||
+                             ThreatInDir(p, b, 0, -1) ||
+                             ThreatInDir(p, b, 1, 0) ||
+                             ThreatInDir(p, b, -1, 0) ||
+                             ThreatInDir(p, b, 1, 1) ||
+                             ThreatInDir(p, b, 1, -1) ||
+                             ThreatInDir(p, b, -1, 1) ||
+                             ThreatInDir(p, b, -1, -1);
 
             if (dirThreat)
                 return dirThreat;
 
-            return KnightThreat(p);
+            return KnightThreat(p,b);
         }
 
-        private bool KnightThreat(Piece p)
+        private bool KnightThreat(Piece p, GameBoard b)
         {
-            List<Knight> knights = p.Color == Player.White ? _board.BlackKnights : _board.WhiteKnights;
+            List<Knight> knights = p.Color == Player.White ? b.BlackKnights : b.WhiteKnights;
 
             foreach (var knight in knights)
             {
-                List<Move> moves = knight.GetAvailableMoves(_board);
+                List<Move> moves = knight.GetAvailableMoves(b);
                 foreach (var move in moves)
                 {
                     if (move.Type == MoveType.Attack && move.Position == p.Position)
@@ -74,7 +74,7 @@ namespace Chess.Game
             return false;
         }
 
-        private bool ThreatInDir(Piece p, int xDir, int yDir)
+        private bool ThreatInDir(Piece p, GameBoard b, int xDir, int yDir)
         {
             int nr_steps = 8;
             PiecePosition pos = p.Position;
@@ -87,7 +87,7 @@ namespace Chess.Game
                 if(!GameBoard.IsInBoard(nPos.X, nPos.Y)) 
                     break;
 
-                Piece otherPiece = _board.GetPieceAt(nPos.X, nPos.Y);
+                Piece otherPiece = b.GetPieceAt(nPos.X, nPos.Y);
 
                 if (otherPiece != null) 
             {
@@ -95,7 +95,7 @@ namespace Chess.Game
                     if (otherPiece.Color == myColor)
                         return false;
 
-                    List<Move> moves = otherPiece.GetAvailableMoves(_board);
+                    List<Move> moves = otherPiece.GetAvailableMoves(b);
                     foreach (var move in moves)
                 {
                         if (move.Type == MoveType.Attack && move.Position == pos)
@@ -112,7 +112,7 @@ namespace Chess.Game
         public bool IsCheck(Player p) {
 
             King king = p == Player.White ? _board.WhiteKing : _board.BlackKing;
-            return IsThreatened(king);
+            return IsThreatened(king, _board);
         }
 
         public bool IsCheckMate(Player p)

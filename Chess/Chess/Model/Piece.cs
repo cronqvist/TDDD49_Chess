@@ -12,12 +12,11 @@ namespace Chess.Model
             Position = pos;
         }
 
-        public Player Color { get; private set; }
-
+        public Player Color { get; protected set; }
         public PiecePosition Position { get; set; }
-
         public String Filename { get; protected set; }
 
+        public abstract Piece Clone();
         public virtual bool IsKing()
         {
             return false;
@@ -72,6 +71,12 @@ namespace Chess.Model
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/bP.png";
             }
+        }
+
+  
+        public override Piece Clone()
+        {
+            return new Pawn(Color, Position);
         }
 
         public override List<Move> GetAvailableMoves(GameBoard board)
@@ -143,6 +148,11 @@ namespace Chess.Model
             }
         }
 
+        public override Piece Clone()
+        {
+            return new King(Color, Position);
+        }
+
         public override bool IsKing()
         {
             return true;
@@ -193,6 +203,11 @@ namespace Chess.Model
             }
         }
 
+        public override Piece Clone()
+        {
+            return new Queen(Color, Position);
+        }
+
         public override List<Move> GetAvailableMoves(GameBoard board)
         {
             var moves = new List<Move>();
@@ -225,6 +240,12 @@ namespace Chess.Model
             }
         }
 
+        public override Piece Clone()
+        {
+            return new Rook(Color, Position);
+        }
+
+
         public override List<Move> GetAvailableMoves(GameBoard board)
         {
             var moves = new List<Move>();
@@ -252,6 +273,12 @@ namespace Chess.Model
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/bN.png";
             }
         }
+
+        public override Piece Clone()
+        {
+            return new Knight(Color, Position);
+        }
+
 
         public override List<Move> GetAvailableMoves(GameBoard board)
         {
@@ -306,6 +333,13 @@ namespace Chess.Model
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/bB.png";
             }
         }
+
+        public override Piece Clone()
+        {
+            return new Bishop(Color, Position);
+        }
+
+
 
         public override List<Move> GetAvailableMoves(GameBoard board)
         {

@@ -103,7 +103,14 @@ namespace Chess.Model
 
         public GameBoard(GameBoard other)
         {
-           /* for (int i = 0; i < 8; ++i)
+            _board = new Square[8, 8];
+            BlackPieces = new List<Piece>();
+            WhitePieces = new List<Piece>();
+
+            WhiteKnights = new List<Knight>();
+            BlackKnights = new List<Knight>();
+
+           for (int i = 0; i < 8; ++i)
             {
                 for (int j = 0; j < 8; ++j)
                 {
@@ -111,14 +118,29 @@ namespace Chess.Model
                 }
             }
 
-            _board = other._board;
-            BlackKnights = other.BlackKnights;
-            BlackPieces = other.BlackPieces;
-            BlackKing = other.BlackKing;
+           other.BlackKnights.ForEach((item) =>
+           {
+              BlackKnights.Add(item.Clone() as Knight);
+           });
 
-            WhiteKnights = other.WhiteKnights;
-            WhitePieces = other.WhitePieces;
-            WhiteKing = other.WhiteKing;*/
+           other.BlackPieces.ForEach((item) =>
+           {
+               BlackPieces.Add(item.Clone());
+           });
+
+           other.WhiteKnights.ForEach((item) =>
+           {
+               WhiteKnights.Add(item.Clone() as Knight);
+           });
+
+           other.WhitePieces.ForEach((item) =>
+           {
+               WhitePieces.Add(item.Clone());
+           });
+
+
+            BlackKing = other.BlackKing.Clone() as King;
+            WhiteKing = other.WhiteKing.Clone() as King;
         }
 
 
