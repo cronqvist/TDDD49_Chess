@@ -6,7 +6,7 @@ using Utilities;
 
 namespace Chess.ViewModels
 {
-    public class MainViewModel
+    internal class MainViewModel
     {
         public MainViewModel()
         {

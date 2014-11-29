@@ -13,7 +13,7 @@ namespace Chess.Game
         private readonly XmlExport _xmlExport;
         private const String XmlFilename = "Game.xml";
 
-        private GameBoard _board;
+        private readonly GameBoard _board;
         private readonly RuleEngine _ruleEngine;
         private List<Move> _moves;
         private Square _selectedSquare;
@@ -42,7 +42,7 @@ namespace Chess.Game
 
         public void NewGame()
         {
-            this.Turn = Player.White;
+            Turn = Player.White;
             _board.BuildStartPieces();
             _board.ResetSquares();
             _xmlExport.Export(XmlFilename);
@@ -128,9 +128,9 @@ namespace Chess.Game
 
 
         private void swapTurn()
-                {
+        {
             Turn = Turn == Player.White ? Player.Black : Player.White;
-            }
+        }
 
         private void resetBackgrounds(IEnumerable<Move> moves)
         {

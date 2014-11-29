@@ -1,33 +1,9 @@
-﻿using System.ComponentModel;
+﻿using Utilities;
 
 namespace Chess.Model
 {
-    public enum SquareBackground
+    public class Square : NotificationObject
     {
-        White,
-        Black,
-        Move,
-        Attacked
-    }
-
-    public class Square : INotifyPropertyChanged
-    {
-        #region property changed
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void OnPropertyChanged(string p)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(p));
-        }
-
-        #endregion property changed
-
-        private SquareBackground _background;
-        private Piece _piece;
-
         public Square(SquareBackground bg)
         {
             Background = bg;
@@ -35,23 +11,26 @@ namespace Chess.Model
             OriginalBackground = bg;
         }
 
+        private Piece _piece;
         public Piece Piece
         {
             get { return _piece; }
             set
             {
                 _piece = value;
-                OnPropertyChanged("Piece");
+                OnPropertyChanged();
             }
         }
 
+        private SquareBackground _background;
         public SquareBackground Background
         {
             get { return _background; }
             set
             {
+                if (value == _background) return;
                 _background = value;
-                OnPropertyChanged("Background");
+                OnPropertyChanged();
             }
         }
 

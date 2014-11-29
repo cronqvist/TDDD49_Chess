@@ -59,7 +59,10 @@
     <Compile Include="Model\Movement.cs" />
     <Compile Include="Model\MoveType.cs" />
     <Compile Include="Model\Piece.cs" />
+    <Compile Include="Model\PiecePosition.cs" />
+    <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Square.cs" />
+    <Compile Include="Model\SquareBackground.cs" />
     <Compile Include="Model\XmlExport.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">
