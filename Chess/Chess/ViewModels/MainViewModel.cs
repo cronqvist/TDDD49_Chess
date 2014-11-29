@@ -10,7 +10,7 @@ namespace Chess.ViewModels
     {
         public MainViewModel()
         {
-            SquarePressed = new SimpleCommand(executeSquarePressed, CanExecuteSquarePressed);
+            SquarePressed = new SimpleCommand(executeSquarePressed, canExecuteSquarePressed);
             NewGame = new SimpleCommand(executeNewGame, canExecuteNewGame);
             Close = new SimpleCommand(executeClose, canExecuteClose);
 
@@ -45,7 +45,7 @@ namespace Chess.ViewModels
             GameEngine.NewGame();
         }
 
-        private bool CanExecuteSquarePressed(object parameter)
+        private bool canExecuteSquarePressed(object parameter)
         {
             return true;
         }
