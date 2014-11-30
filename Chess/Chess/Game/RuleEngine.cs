@@ -4,6 +4,11 @@ using System.Linq;
 
 namespace Chess.Game
 {
+    public enum CheckState
+    {
+        NONE, CHECK, MATE
+    };
+
     public class RuleEngine
     {
         private readonly GameBoard _board;
@@ -25,6 +30,9 @@ namespace Chess.Game
                 GameBoard newBoard = new GameBoard(_board);
                 King mKing = piece.Color == Player.White ? newBoard.WhiteKing : newBoard.BlackKing;
 
+                if (piece.IsKing())
+                    mKing.Position = move.Position;
+            
                 Square startSquare = newBoard.Board[orgPos.X, orgPos.Y];
                 Square endSquare = newBoard.Board[move.Position.X, move.Position.Y];
 
@@ -32,10 +40,8 @@ namespace Chess.Game
                 startSquare.Piece = null;
 
                 if (!IsThreatened(mKing, newBoard))
-                    ret.Add(move); 
+                    ret.Add(move);
             }
-
-            //ret = potentialMoves;
 
             return ret;
         }
@@ -90,17 +96,17 @@ namespace Chess.Game
                 Piece otherPiece = b.GetPieceAt(nPos.X, nPos.Y);
 
                 if (otherPiece != null) 
-            {
+                {
 
                     if (otherPiece.Color == myColor)
                         return false;
 
                     List<Move> moves = otherPiece.GetAvailableMoves(b);
                     foreach (var move in moves)
-                {
+                    {
                         if (move.Type == MoveType.Attack && move.Position == pos)
                             return true;
-                }
+                    }
 
                     return false;
                 }
@@ -109,29 +115,25 @@ namespace Chess.Game
             return false;
         }
 
-        public bool IsCheck(Player p) {
+        public CheckState GetCheckState(Player p)
+        {
 
             King king = p == Player.White ? _board.WhiteKing : _board.BlackKing;
-            return IsThreatened(king, _board);
-        }
 
-        public bool IsCheckMate(Player p)
-        {
-           /* if (IsCheck(p))
+            if (IsThreatened(king, _board))
             {
                 List<Piece> pieces = p == Player.White ? _board.WhitePieces : _board.BlackPieces;
                 foreach (var piece in pieces)
                 {
-                    List<Move> moves = piece.GetAvailableMoves(_board);
-                    foreach (var move in moves)
-                    {
-
-                    }
+                    List<Move> moves = GetAvailableMoves(piece);
+                    if (moves.Count > 0)
+                        return CheckState.CHECK;
                 }
-            }*/
+                return CheckState.MATE;
+            }
 
-
-            return false;
+            return CheckState.NONE;
         }
+
     }
 }

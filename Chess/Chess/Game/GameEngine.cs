@@ -104,9 +104,20 @@ namespace Chess.Game
                         _selectedSquare.Piece = null;
 
                         Player p = Turn == Player.White ? Player.Black : Player.White;
-                        if (_ruleEngine.IsCheck(p))
+                        CheckState cState = _ruleEngine.GetCheckState(p);
+
+                        switch (cState)
                         {
-                            MessageBox.Show("lol check!", "lol");
+                            case CheckState.MATE :
+                                MessageBox.Show("lol check mate!", "lol");
+                                _board.ClearBoard();
+                                NewGame();
+                                break;
+                            case CheckState.CHECK :
+                                MessageBox.Show("lol check!", "lol");
+                                break;
+                            default :
+                                break;
                         }
 
                         break;

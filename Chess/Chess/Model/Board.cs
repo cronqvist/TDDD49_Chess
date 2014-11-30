@@ -67,10 +67,22 @@ namespace Chess.Model
 
                 if (piece.Color == Player.Black)
                 {
+                    if (piece.IsKing())
+                        BlackKing = piece as King;
+
+                    if (piece.IsKnight())
+                        BlackKnights.Add(piece as Knight);
+
                     BlackPieces.Add(piece);
                 }
                 else
                 {
+                    if (piece.IsKing())
+                        WhiteKing = piece as King;
+
+                    if (piece.IsKnight())
+                        WhiteKnights.Add(piece as Knight);
+
                     WhitePieces.Add(piece);
                 }
             }
@@ -78,6 +90,10 @@ namespace Chess.Model
 
         public void ClearBoard()
         {
+            WhiteKing = null;
+            BlackKing = null;
+            WhiteKnights.Clear();
+            BlackKnights.Clear();
             WhitePieces.Clear();
             BlackPieces.Clear();
 
@@ -141,6 +157,11 @@ namespace Chess.Model
 
             BlackKing = other.BlackKing.Clone() as King;
             WhiteKing = other.WhiteKing.Clone() as King;
+        }
+
+        public void MovePiece(Piece p, PiecePosition pos)
+        {
+            
         }
 
 

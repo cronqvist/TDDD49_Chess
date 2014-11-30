@@ -21,6 +21,10 @@ namespace Chess.Model
         {
             return false;
         }
+        public virtual bool IsKnight()
+        {
+            return false;
+        }
 
         protected List<Move> GetMovesInLine(GameBoard board, int dirX, int dirY, int steps = 8)
         {
@@ -279,6 +283,11 @@ namespace Chess.Model
             return new Knight(Color, Position);
         }
 
+
+        public override bool IsKnight()
+        {
+            return true;
+        }
 
         public override List<Move> GetAvailableMoves(GameBoard board)
         {
