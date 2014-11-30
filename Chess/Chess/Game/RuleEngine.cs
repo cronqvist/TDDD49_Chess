@@ -29,15 +29,12 @@ namespace Chess.Game
             {
                 GameBoard newBoard = new GameBoard(_board);
                 King mKing = piece.Color == Player.White ? newBoard.WhiteKing : newBoard.BlackKing;
+                Piece nPiece = newBoard.GetPieceAt(orgPos.X, orgPos.Y);
 
-                if (piece.IsKing())
-                    mKing.Position = move.Position;
-            
-                Square startSquare = newBoard.Board[orgPos.X, orgPos.Y];
-                Square endSquare = newBoard.Board[move.Position.X, move.Position.Y];
+                if (nPiece.IsKing())
+                    mKing = nPiece as King;
 
-                endSquare.Piece = startSquare.Piece;
-                startSquare.Piece = null;
+                newBoard.MovePiece(nPiece, move.Position);
 
                 if (!IsThreatened(mKing, newBoard))
                     ret.Add(move);

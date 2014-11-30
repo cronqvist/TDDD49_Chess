@@ -40,6 +40,48 @@ namespace Chess.Model
             BuildStartPieces();
         }
 
+        public GameBoard(GameBoard other)
+        {
+            _board = new Square[8, 8];
+            BlackPieces = new List<Piece>();
+            WhitePieces = new List<Piece>();
+
+            WhiteKnights = new List<Knight>();
+            BlackKnights = new List<Knight>();
+
+            for (int i = 0; i < 8; ++i)
+            {
+                for (int j = 0; j < 8; ++j)
+                {
+                    _board[i, j] = new Square(other._board[i, j]);
+                }
+            }
+
+            other.BlackKnights.ForEach((item) =>
+            {
+                BlackKnights.Add(item.Clone() as Knight);
+            });
+
+            other.BlackPieces.ForEach((item) =>
+            {
+                BlackPieces.Add(item.Clone());
+            });
+
+            other.WhiteKnights.ForEach((item) =>
+            {
+                WhiteKnights.Add(item.Clone() as Knight);
+            });
+
+            other.WhitePieces.ForEach((item) =>
+            {
+                WhitePieces.Add(item.Clone());
+            });
+
+
+            BlackKing = other.BlackKing.Clone() as King;
+            WhiteKing = other.WhiteKing.Clone() as King;
+        }
+
         public void ResetSquares()
         {
             for (int i = 0; i < 8; i++)
@@ -106,6 +148,40 @@ namespace Chess.Model
             }
         }
 
+        public void KillPiece(Piece p)
+        {
+            if (p.Color == Player.Black)
+            {
+                BlackPieces.RemoveAll(piece => p.Position == piece.Position);
+                if (p.IsKnight())
+                    BlackKnights.RemoveAll(piece => p.Position == piece.Position);
+            }
+            else
+            {
+                WhitePieces.RemoveAll(piece => p.Position == piece.Position);
+                if (p.IsKnight())
+                    WhiteKnights.RemoveAll(piece => p.Position == piece.Position);
+            }
+
+            _board[p.Position.X, p.Position.Y].Piece = null;
+        }
+
+        public void MovePiece(Piece p, PiecePosition newPos)
+        {
+            Square nSquare = _board[newPos.X, newPos.Y];
+            Square oSquare = _board[p.Position.X, p.Position.Y];
+
+            oSquare.Piece = null;
+
+            if (nSquare.Piece != null)
+            {
+                KillPiece(nSquare.Piece);
+            }
+
+            p.Position = newPos;
+            nSquare.Piece = p;
+        }
+
 
         public Square this[int x, int y]
         {
@@ -117,54 +193,7 @@ namespace Chess.Model
             get { return _board; }
         }
 
-        public GameBoard(GameBoard other)
-        {
-            _board = new Square[8, 8];
-            BlackPieces = new List<Piece>();
-            WhitePieces = new List<Piece>();
-
-            WhiteKnights = new List<Knight>();
-            BlackKnights = new List<Knight>();
-
-           for (int i = 0; i < 8; ++i)
-            {
-                for (int j = 0; j < 8; ++j)
-                {
-                    _board[i, j] = new Square(other._board[i, j]);
-                }
-            }
-
-           other.BlackKnights.ForEach((item) =>
-           {
-              BlackKnights.Add(item.Clone() as Knight);
-           });
-
-           other.BlackPieces.ForEach((item) =>
-           {
-               BlackPieces.Add(item.Clone());
-           });
-
-           other.WhiteKnights.ForEach((item) =>
-           {
-               WhiteKnights.Add(item.Clone() as Knight);
-           });
-
-           other.WhitePieces.ForEach((item) =>
-           {
-               WhitePieces.Add(item.Clone());
-           });
-
-
-            BlackKing = other.BlackKing.Clone() as King;
-            WhiteKing = other.WhiteKing.Clone() as King;
-        }
-
-        public void MovePiece(Piece p, PiecePosition pos)
-        {
-            
-        }
-
-
+ 
         public void SetBackgroundAt(int x, int y, SquareBackground bg)
         {
             _board[x, y].Background = bg;

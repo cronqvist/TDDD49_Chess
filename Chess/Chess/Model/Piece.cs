@@ -6,6 +6,8 @@ namespace Chess.Model
 {
     public abstract class Piece
     {
+        
+            
         protected Piece(Player color, PiecePosition pos)
         {
             Color = color;
@@ -64,9 +66,15 @@ namespace Chess.Model
 
     public class Pawn : Piece
     {
-        public Pawn(Player color, PiecePosition pos)
+
+        private bool hasMoved;
+
+        public Pawn(Player color, PiecePosition pos, bool moved = false)
             : base(color, pos)
         {
+
+            hasMoved = moved;
+
             if (color == Player.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wP.png";
@@ -80,7 +88,7 @@ namespace Chess.Model
   
         public override Piece Clone()
         {
-            return new Pawn(Color, Position);
+            return new Pawn(Color, Position, hasMoved);
         }
 
         public override List<Move> GetAvailableMoves(GameBoard board)
@@ -88,7 +96,11 @@ namespace Chess.Model
             var ret = new List<Move>();
             PiecePosition pos = Position;
 
-            int nrSteps = pos.Y == 1 || pos.Y == 6 ? 2 : 1;
+            int nrSteps = 1;
+
+            if ((Color == Player.White && Position.Y == 1) || (Color == Player.Black && Position.Y == 6))
+                nrSteps = 2;
+       
             int dir = Color == Player.Black ? -1 : 1;
 
             IEnumerable<int> steps = Enumerable.Range(1, nrSteps);
@@ -96,10 +108,11 @@ namespace Chess.Model
             foreach (int i in steps)
             {
                 int row = pos.Y + i*dir;
-                Square curSquare = board.Board[pos.X, row];
 
                 if (!GameBoard.IsInBoard(pos.X, row))
                     break;
+                
+                Square curSquare = board.Board[pos.X, row];
 
                 if (curSquare.Piece == null)
                 {

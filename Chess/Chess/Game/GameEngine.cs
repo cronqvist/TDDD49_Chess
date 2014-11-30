@@ -98,10 +98,13 @@ namespace Chess.Game
                 {
                     if (Board[move.Position.X, move.Position.Y] == square) // find the move
                     {
-                        _selectedSquare.Piece.Position = new PiecePosition(move.Position.X, move.Position.Y);
+                        /*_selectedSquare.Piece.Position = new PiecePosition(move.Position.X, move.Position.Y);
                         Board[move.Position.X, move.Position.Y].Piece = _selectedSquare.Piece;
                             //TODO: Play som fancy animation
                         _selectedSquare.Piece = null;
+                        */
+
+                        _board.MovePiece(_selectedSquare.Piece, move.Position);
 
                         Player p = Turn == Player.White ? Player.Black : Player.White;
                         CheckState cState = _ruleEngine.GetCheckState(p);
