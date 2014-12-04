@@ -8,13 +8,13 @@ namespace Chess.Model
     {
         
             
-        protected Piece(Player color, PiecePosition pos)
+        protected Piece(PlayerColor color, PiecePosition pos)
         {
             Color = color;
             Position = pos;
         }
 
-        public Player Color { get; protected set; }
+        public PlayerColor Color { get; protected set; }
         public PiecePosition Position { get; set; }
         public String Filename { get; protected set; }
 
@@ -69,13 +69,13 @@ namespace Chess.Model
 
         private bool hasMoved;
 
-        public Pawn(Player color, PiecePosition pos, bool moved = false)
+        public Pawn(PlayerColor color, PiecePosition pos, bool moved = false)
             : base(color, pos)
         {
 
             hasMoved = moved;
 
-            if (color == Player.White)
+            if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wP.png";
             }
@@ -98,10 +98,10 @@ namespace Chess.Model
 
             int nrSteps = 1;
 
-            if ((Color == Player.White && Position.Y == 1) || (Color == Player.Black && Position.Y == 6))
+            if ((Color == PlayerColor.White && Position.Y == 1) || (Color == PlayerColor.Black && Position.Y == 6))
                 nrSteps = 2;
        
-            int dir = Color == Player.Black ? -1 : 1;
+            int dir = Color == PlayerColor.Black ? -1 : 1;
 
             IEnumerable<int> steps = Enumerable.Range(1, nrSteps);
 
@@ -152,10 +152,10 @@ namespace Chess.Model
 
     public class King : Piece
     {
-        public King(Player color, PiecePosition pos)
+        public King(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
-            if (color == Player.White)
+            if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wK.png";
             }
@@ -207,10 +207,10 @@ namespace Chess.Model
 
     public class Queen : Piece
     {
-        public Queen(Player color, PiecePosition pos)
+        public Queen(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
-            if (color == Player.White)
+            if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wQ.png";
             }
@@ -244,10 +244,10 @@ namespace Chess.Model
 
     public class Rook : Piece
     {
-        public Rook(Player color, PiecePosition pos)
+        public Rook(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
-            if (color == Player.White)
+            if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wR.png";
             }
@@ -278,10 +278,10 @@ namespace Chess.Model
 
     public class Knight : Piece
     {
-        public Knight(Player color, PiecePosition pos)
+        public Knight(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
-            if (color == Player.White)
+            if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wN.png";
             }
@@ -343,10 +343,10 @@ namespace Chess.Model
 
     public class Bishop : Piece
     {
-        public Bishop(Player color, PiecePosition pos)
+        public Bishop(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
-            if (color == Player.White)
+            if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wB.png";
             }

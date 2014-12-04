@@ -18,13 +18,23 @@ namespace Chess.Game
         private List<Move> _moves;
         private Square _selectedSquare;
 
+        private Queue<Player> players;
+        private Player currentPlayer;
+
         private FileSystemWatcher _fileSystemWatcher;
 
         public GameEngine()
         {
-            Turn = Player.White;
+            Turn = PlayerColor.White;
             _board = new GameBoard();
-            _ruleEngine = new RuleEngine(Board);
+
+            players = new Queue<Player>();
+            players.Enqueue(new HumanPlayer(PlayerColor.White, _board, this.MoveTo, this.HumanSelectSquare));
+            players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
+
+            currentPlayer = players.Dequeue();
+
+            //_ruleEngine = new RuleEngine(Board);
 
             _xmlExport = new XmlExport(this);
 
@@ -38,11 +48,22 @@ namespace Chess.Game
             }
 
             fileSystemWatcherinit(); // watch for changes in xml file*/
+
+            currentPlayer.StartTurn();
         }
 
         public void NewGame()
         {
-            Turn = Player.White;
+            Turn = PlayerColor.White;
+
+            players = new Queue<Player>();
+            players.Enqueue(new HumanPlayer(PlayerColor.White, _board, this.MoveTo, this.HumanSelectSquare));
+            players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
+
+            currentPlayer = players.Dequeue();
+
+            currentPlayer.StartTurn();
+
             _board.BuildStartPieces();
             _board.ResetSquares();
             _xmlExport.Export(XmlFilename);
@@ -68,12 +89,97 @@ namespace Chess.Game
             get { return _board; }
         }
 
-        public Player Turn { get; set; }
+        public PlayerColor Turn { get; set; }
 
+        public void HumanSelectSquare(Square square)
+        {
+            _selectedSquare = square;
+            Piece piece = square.Piece;
+
+            if (_moves != null) // if there already are moves, reset them
+            {
+                resetBackgrounds(_moves);
+            }
+
+            _moves = RuleEngine.GetAvailableMoves(piece, _board); // gets the new moves for the current piece
+            foreach (Move move in _moves)
+            {
+                SquareBackground bg = move.Type == MoveType.Move ? SquareBackground.Move : SquareBackground.Attacked;
+                Board.SetBackgroundAt(move.Position.X, move.Position.Y, bg);
+            }
+        }
+
+        public void AISelectSquare(Square square)
+        {
+            _selectedSquare = square;
+            Piece piece = square.Piece;
+
+            if (_moves != null) // if there already are moves, reset them
+            {
+                resetBackgrounds(_moves);
+            }
+
+            //this is bad the moves has already been computed by the AIplayer
+            //TODO: FIX
+            _moves = RuleEngine.GetAvailableMoves(piece, _board); // gets the new moves for the current piece
+        }
+
+
+
+        public void MoveTo(Square square)
+        {
+
+            Move mMove = null;
+
+            foreach (Move move in _moves)
+            {
+                if (Board[move.Position.X, move.Position.Y] == square) // find the move
+                {
+                    mMove = move;
+                }
+            }
+
+            if (mMove == null)
+                return; //lol raise exception
+
+            _board.MovePiece(_selectedSquare.Piece, mMove );
+
+            PlayerColor p = Turn == PlayerColor.White ? PlayerColor.Black : PlayerColor.White;
+            CheckState cState = RuleEngine.GetCheckState(p, _board);
+
+            switch (cState)
+            {
+                case CheckState.MATE:
+                    MessageBox.Show("lol check mate!", "lol");
+                    _board.ClearBoard();
+                    NewGame();
+                    break;
+                case CheckState.CHECK:
+                    MessageBox.Show("lol check!", "lol");
+                    break;
+                default:
+                    break;
+            }
+
+            resetBackgrounds(_moves);
+            swapTurn();
+            
+
+            _fileSystemWatcher.EnableRaisingEvents = false;
+            _xmlExport.Export(XmlFilename);
+            _fileSystemWatcher.EnableRaisingEvents = true;
+
+            _selectedSquare = null;
+            _moves = null;
+
+        }
 
         public void HandleInput(Square square)
         {
-            Piece piece = square.Piece;
+
+            currentPlayer.SquarePressed(square);
+
+           /* Piece piece = square.Piece;
 
             if (piece != null && piece.Color == Turn) // a piece of correct turn was pressed
             {
@@ -84,7 +190,7 @@ namespace Chess.Game
                     resetBackgrounds(_moves);
                 }
 
-                _moves = _ruleEngine.GetAvailableMoves(piece); // gets the new moves for the current piece
+                _moves = RuleEngine.GetAvailableMoves(piece, _board); // gets the new moves for the current piece
                 foreach (Move move in _moves)
                 {
                     SquareBackground bg = move.Type == MoveType.Move ? SquareBackground.Move : SquareBackground.Attacked;
@@ -98,16 +204,11 @@ namespace Chess.Game
                 {
                     if (Board[move.Position.X, move.Position.Y] == square) // find the move
                     {
-                        /*_selectedSquare.Piece.Position = new PiecePosition(move.Position.X, move.Position.Y);
-                        Board[move.Position.X, move.Position.Y].Piece = _selectedSquare.Piece;
-                            //TODO: Play som fancy animation
-                        _selectedSquare.Piece = null;
-                        */
-
+                 
                         _board.MovePiece(_selectedSquare.Piece, move.Position);
 
-                        Player p = Turn == Player.White ? Player.Black : Player.White;
-                        CheckState cState = _ruleEngine.GetCheckState(p);
+                        PlayerColor p = Turn == PlayerColor.White ? PlayerColor.Black : PlayerColor.White;
+                        CheckState cState = RuleEngine.GetCheckState(p, _board);
 
                         switch (cState)
                         {
@@ -137,13 +238,16 @@ namespace Chess.Game
 
                 _selectedSquare = null;
                 _moves = null;
-            }
+            }*/
         }
 
 
         private void swapTurn()
         {
-            Turn = Turn == Player.White ? Player.Black : Player.White;
+            Turn = Turn == PlayerColor.White ? PlayerColor.Black : PlayerColor.White;
+            players.Enqueue(currentPlayer);
+            currentPlayer = players.Dequeue();
+            currentPlayer.StartTurn();
         }
 
         private void resetBackgrounds(IEnumerable<Move> moves)

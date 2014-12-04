@@ -11,14 +11,14 @@ namespace Chess.Game
 
     public class RuleEngine
     {
-        private readonly GameBoard _board;
+        //private readonly GameBoard _board;
 
-        public RuleEngine(GameBoard board)
+        /*public RuleEngine(GameBoard board)
         {
             _board = board;
-        }
+        }*/
 
-        public List<Move> GetAvailableMoves(Piece piece)
+        public static List<Move> GetAvailableMoves(Piece piece, GameBoard _board)
         {
             List<Move> ret = new List<Move>();
             List<Move> potentialMoves = piece.GetAvailableMoves(_board);
@@ -28,13 +28,13 @@ namespace Chess.Game
             foreach (var move in potentialMoves)
             {
                 GameBoard newBoard = new GameBoard(_board);
-                King mKing = piece.Color == Player.White ? newBoard.WhiteKing : newBoard.BlackKing;
+                King mKing = piece.Color == PlayerColor.White ? newBoard.WhiteKing : newBoard.BlackKing;
                 Piece nPiece = newBoard.GetPieceAt(orgPos.X, orgPos.Y);
 
                 if (nPiece.IsKing())
                     mKing = nPiece as King;
 
-                newBoard.MovePiece(nPiece, move.Position);
+                newBoard.MovePiece(nPiece, move);
 
                 if (!IsThreatened(mKing, newBoard))
                     ret.Add(move);
@@ -43,7 +43,7 @@ namespace Chess.Game
             return ret;
         }
 
-        private bool IsThreatened(Piece p, GameBoard b)
+        private static bool IsThreatened(Piece p, GameBoard b)
         {
             bool dirThreat = ThreatInDir(p, b, 0, 1) ||
                              ThreatInDir(p, b, 0, -1) ||
@@ -60,9 +60,9 @@ namespace Chess.Game
             return KnightThreat(p,b);
         }
 
-        private bool KnightThreat(Piece p, GameBoard b)
+        private static bool KnightThreat(Piece p, GameBoard b)
         {
-            List<Knight> knights = p.Color == Player.White ? b.BlackKnights : b.WhiteKnights;
+            List<Knight> knights = p.Color == PlayerColor.White ? b.BlackKnights : b.WhiteKnights;
 
             foreach (var knight in knights)
             {
@@ -77,11 +77,11 @@ namespace Chess.Game
             return false;
         }
 
-        private bool ThreatInDir(Piece p, GameBoard b, int xDir, int yDir)
+        private static bool ThreatInDir(Piece p, GameBoard b, int xDir, int yDir)
         {
             int nr_steps = 8;
             PiecePosition pos = p.Position;
-            Player myColor = p.Color;
+            PlayerColor myColor = p.Color;
             IEnumerable<int> steps = Enumerable.Range(1,nr_steps);
             foreach (int step in steps)
             {
@@ -112,17 +112,17 @@ namespace Chess.Game
             return false;
         }
 
-        public CheckState GetCheckState(Player p)
+        public static CheckState GetCheckState(PlayerColor p, GameBoard _board)
         {
 
-            King king = p == Player.White ? _board.WhiteKing : _board.BlackKing;
+            King king = p == PlayerColor.White ? _board.WhiteKing : _board.BlackKing;
 
             if (IsThreatened(king, _board))
             {
-                List<Piece> pieces = p == Player.White ? _board.WhitePieces : _board.BlackPieces;
+                List<Piece> pieces = p == PlayerColor.White ? _board.WhitePieces : _board.BlackPieces;
                 foreach (var piece in pieces)
                 {
-                    List<Move> moves = GetAvailableMoves(piece);
+                    List<Move> moves = GetAvailableMoves(piece, _board);
                     if (moves.Count > 0)
                         return CheckState.CHECK;
                 }

@@ -34,11 +34,11 @@ namespace Chess.Model
             var turn = doc.Descendants("Turn").First().Value;
             if (turn == "Black")
             {
-                gameEngine.Turn = Player.Black;
+                gameEngine.Turn = PlayerColor.Black;
             }
             else
             {
-                gameEngine.Turn = Player.White;
+                gameEngine.Turn = PlayerColor.White;
             }
 
             var piecesList = (from pieces in doc.Descendants("Piece")
@@ -47,14 +47,14 @@ namespace Chess.Model
             foreach (var xElement in piecesList)
             {
                 var color = xElement.Descendants("Player").First().Value;
-                Player playerColor;
+                PlayerColor playerColor;
                 if (color == "White")
                 {
-                    playerColor = Player.White;
+                    playerColor = PlayerColor.White;
                 }
                 else
                 {
-                    playerColor = Player.Black;
+                    playerColor = PlayerColor.Black;
                 }
 
                 var type = xElement.Descendants("Type").First().Value;

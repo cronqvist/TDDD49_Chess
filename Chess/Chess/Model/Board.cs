@@ -95,8 +95,8 @@ namespace Chess.Model
 
         public void BuildStartPieces()
         {
-            WhitePieces = buildPieces(Player.White);
-            BlackPieces = buildPieces(Player.Black);
+            WhitePieces = buildPieces(PlayerColor.White);
+            BlackPieces = buildPieces(PlayerColor.Black);
         }
 
         public void SetBoard(List<Piece> pieces)
@@ -107,7 +107,7 @@ namespace Chess.Model
             {
                 _board[piece.Position.X, piece.Position.Y].Piece = piece;
 
-                if (piece.Color == Player.Black)
+                if (piece.Color == PlayerColor.Black)
                 {
                     if (piece.IsKing())
                         BlackKing = piece as King;
@@ -150,25 +150,27 @@ namespace Chess.Model
 
         public void KillPiece(Piece p)
         {
-            if (p.Color == Player.Black)
+            int rm;
+
+            if (p.Color == PlayerColor.Black)
             {
-                BlackPieces.RemoveAll(piece => p.Position == piece.Position);
+                rm = BlackPieces.RemoveAll(piece => p.Position == piece.Position);
                 if (p.IsKnight())
-                    BlackKnights.RemoveAll(piece => p.Position == piece.Position);
+                    rm = BlackKnights.RemoveAll(piece => p.Position == piece.Position);
             }
             else
             {
-                WhitePieces.RemoveAll(piece => p.Position == piece.Position);
+                rm = WhitePieces.RemoveAll(piece => p.Position == piece.Position);
                 if (p.IsKnight())
-                    WhiteKnights.RemoveAll(piece => p.Position == piece.Position);
+                    rm = WhiteKnights.RemoveAll(piece => p.Position == piece.Position);
             }
 
             _board[p.Position.X, p.Position.Y].Piece = null;
         }
 
-        public void MovePiece(Piece p, PiecePosition newPos)
+        public void MovePiece(Piece p, Move newMove)
         {
-            Square nSquare = _board[newPos.X, newPos.Y];
+            Square nSquare = _board[newMove.Position.X, newMove.Position.Y];
             Square oSquare = _board[p.Position.X, p.Position.Y];
 
             oSquare.Piece = null;
@@ -178,7 +180,7 @@ namespace Chess.Model
                 KillPiece(nSquare.Piece);
             }
 
-            p.Position = newPos;
+            p.Position = newMove.Position;
             nSquare.Piece = p;
         }
 
@@ -199,13 +201,13 @@ namespace Chess.Model
             _board[x, y].Background = bg;
         }
 
-        private List<Piece> buildPieces(Player c)
+        private List<Piece> buildPieces(PlayerColor c)
         {
             var ret = new List<Piece>();
             int pawnRow;
             int royalRow;
 
-            if (c == Player.Black)
+            if (c == PlayerColor.Black)
             {
                 pawnRow = 6;
                 royalRow = 7;
@@ -226,7 +228,7 @@ namespace Chess.Model
             Knight k1 = new Knight(c, new PiecePosition(1, royalRow));
             Knight k2 = new Knight(c, new PiecePosition(6, royalRow));
 
-            if(c == Player.Black) {
+            if(c == PlayerColor.Black) {
                 this.BlackKing = king;
                 BlackKnights.Add(k1);
                 BlackKnights.Add(k2);
