@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Chess.Model;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Chess.Game
 {
@@ -24,6 +25,8 @@ namespace Chess.Game
             List<Move> potentialMoves = piece.GetAvailableMoves(_board);
             PiecePosition orgPos = piece.Position;
 
+            int bCount_old = _board.BlackPieces.Count;
+
             //Check for "self check" 
             foreach (var move in potentialMoves)
             {
@@ -39,6 +42,10 @@ namespace Chess.Game
                 if (!IsThreatened(mKing, newBoard))
                     ret.Add(move);
             }
+
+            int bCount_new = _board.BlackPieces.Count;
+            Debug.Assert(bCount_new == bCount_old);
+            
 
             return ret;
         }
@@ -79,6 +86,9 @@ namespace Chess.Game
 
         private static bool ThreatInDir(Piece p, GameBoard b, int xDir, int yDir)
         {
+            if (p == null)
+                return false; //therse something weird going on
+
             int nr_steps = 8;
             PiecePosition pos = p.Position;
             PlayerColor myColor = p.Color;

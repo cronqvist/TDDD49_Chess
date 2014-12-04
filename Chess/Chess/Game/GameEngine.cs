@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using Chess.Model;
+using System.Diagnostics;
 
 namespace Chess.Game
 {
@@ -140,7 +141,7 @@ namespace Chess.Game
             }
 
             if (mMove == null)
-                return; //lol raise exception
+                Debug.Assert(false);
 
             _board.MovePiece(_selectedSquare.Piece, mMove );
 
@@ -161,7 +162,10 @@ namespace Chess.Game
                     break;
             }
 
+
+            _selectedSquare = null;
             resetBackgrounds(_moves);
+            _moves = null;
             swapTurn();
             
 
@@ -169,8 +173,7 @@ namespace Chess.Game
             _xmlExport.Export(XmlFilename);
             _fileSystemWatcher.EnableRaisingEvents = true;
 
-            _selectedSquare = null;
-            _moves = null;
+           
 
         }
 

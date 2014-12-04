@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Chess.Model
@@ -164,6 +165,10 @@ namespace Chess.Model
                 if (p.IsKnight())
                     rm = WhiteKnights.RemoveAll(piece => p.Position == piece.Position);
             }
+
+            int i;
+            if(rm > 1)
+                i = 1;
 
             _board[p.Position.X, p.Position.Y].Piece = null;
         }

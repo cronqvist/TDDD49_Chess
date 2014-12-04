@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using Chess.Game;
+using System.Diagnostics;
 
 namespace Chess.Model
 {
@@ -90,12 +91,27 @@ namespace Chess.Model
         public override void StartTurn()
         {
             List<Piece> pieces = _color == PlayerColor.Black ?_board.BlackPieces : _board.WhitePieces;
-            Tuple<Move, Piece> ret = _strgy.ChooseMove(pieces, _board);
+
+            List<Piece> piecesCopy = new List<Piece>();
+
+            foreach (var piece in pieces)
+            {
+                piecesCopy.Add(piece.Clone());
+            }
+            
+            Tuple<Move, Piece> ret = _strgy.ChooseMove(piecesCopy, _board);
+
             Piece p = ret.Item2;
             Move m = ret.Item1;
 
+            int oCount = pieces.Count;
+
             _selectCb(_board[p.Position.X, p.Position.Y]);
             _makeMoveCb(_board[m.Position.X, m.Position.Y]);
+
+            int nCount = pieces.Count;
+
+            Debug.Assert(nCount == oCount);
         }
 
     }
@@ -111,19 +127,26 @@ namespace Chess.Model
         public override Tuple<Move, Piece> ChooseMove(List<Piece> pieces, GameBoard board)
         {
             Random rand = new Random();
-            Piece randPiece = pieces[rand.Next(0, pieces.Count - 1)];
+           
 
-            List<Move> moves = RuleEngine.GetAvailableMoves(randPiece, board);
-
-            if(moves.Count == 0) 
+            while (pieces.Count > 0)
             {
-                pieces.Remove(randPiece);
-                return ChooseMove(pieces, board);
+                Piece randPiece = pieces[rand.Next(0, pieces.Count - 1)];
+                List<Move> moves = RuleEngine.GetAvailableMoves(randPiece, board);
+
+                if (moves.Count == 0)
+                {
+                    pieces.Remove(randPiece);
+                    continue;
+                }
+
+
+                Move randMove = moves[rand.Next(0, moves.Count - 1)];
+                return new Tuple<Move, Piece>(randMove, randPiece);
             }
 
-            Move randMove = moves[rand.Next(0, moves.Count - 1)];
-
-            return new Tuple<Move, Piece>(randMove, randPiece);
+            Debug.Assert(false);
+            return new Tuple<Move, Piece>(null, null);
         }
     }
 }

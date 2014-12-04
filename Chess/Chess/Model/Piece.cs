@@ -130,7 +130,7 @@ namespace Chess.Model
 
             if (GameBoard.IsInBoard(attackX1, attackY))
             {
-                Piece other = board.GetPieceAt(attackX1, attackY);
+                Piece other = board[attackX1, attackY].Piece;
                 if (other != null && other.Color != Color)
                 {
                     ret.Add(new Move(new PiecePosition(attackX1, attackY), MoveType.Attack));
