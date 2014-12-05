@@ -15,7 +15,6 @@ namespace Chess.Game
         private const String XmlFilename = "Game.xml";
 
         private readonly GameBoard _board;
-        private readonly RuleEngine _ruleEngine;
         private List<Move> _moves;
         private Square _selectedSquare;
 
@@ -31,6 +30,7 @@ namespace Chess.Game
 
             players = new Queue<Player>();
             players.Enqueue(new HumanPlayer(PlayerColor.White, _board, this.MoveTo, this.HumanSelectSquare));
+            //players.Enqueue(new AIPlayer(PlayerColor.White, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
             players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
 
             currentPlayer = players.Dequeue();
@@ -151,30 +151,31 @@ namespace Chess.Game
             switch (cState)
             {
                 case CheckState.MATE:
-                    MessageBox.Show("lol check mate!", "lol");
+                    MessageBox.Show("lol checkmate!", "lol");
                     _board.ClearBoard();
                     NewGame();
                     break;
                 case CheckState.CHECK:
                     MessageBox.Show("lol check!", "lol");
+                    goto default;
+                case CheckState.STALE :
+                    MessageBox.Show("lol stalemate!", "lol");
+                    _board.ClearBoard();
+                    NewGame();
                     break;
                 default:
-                    break;
-            }
-
-
-            _selectedSquare = null;
-            resetBackgrounds(_moves);
-            _moves = null;
-            swapTurn();
+                    _selectedSquare = null;
+                    resetBackgrounds(_moves);
+                    _moves = null;
+                    swapTurn();
             
 
-            _fileSystemWatcher.EnableRaisingEvents = false;
-            _xmlExport.Export(XmlFilename);
-            _fileSystemWatcher.EnableRaisingEvents = true;
-
-           
-
+                    _fileSystemWatcher.EnableRaisingEvents = false;
+                    _xmlExport.Export(XmlFilename);
+                    _fileSystemWatcher.EnableRaisingEvents = true;
+                    
+                    break;
+            }
         }
 
         public void HandleInput(Square square)
@@ -243,7 +244,6 @@ namespace Chess.Game
                 _moves = null;
             }*/
         }
-
 
         private void swapTurn()
         {

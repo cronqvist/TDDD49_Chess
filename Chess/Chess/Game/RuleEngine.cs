@@ -7,7 +7,7 @@ namespace Chess.Game
 {
     public enum CheckState
     {
-        NONE, CHECK, MATE
+        NONE, CHECK, MATE, STALE
     };
 
     public class RuleEngine
@@ -87,7 +87,7 @@ namespace Chess.Game
         private static bool ThreatInDir(Piece p, GameBoard b, int xDir, int yDir)
         {
             if (p == null)
-                return false; //therse something weird going on
+                return false; //theres something weird going on
 
             int nr_steps = 8;
             PiecePosition pos = p.Position;
@@ -124,22 +124,26 @@ namespace Chess.Game
 
         public static CheckState GetCheckState(PlayerColor p, GameBoard _board)
         {
-
+            bool canMove = false;
             King king = p == PlayerColor.White ? _board.WhiteKing : _board.BlackKing;
+
+            List<Piece> pieces = p == PlayerColor.White ? _board.WhitePieces : _board.BlackPieces;
+            foreach (var piece in pieces)
+            {
+                List<Move> moves = GetAvailableMoves(piece, _board);
+                if (moves.Count > 0)
+                {
+                    canMove = true;
+                    break;
+                }
+            }
 
             if (IsThreatened(king, _board))
             {
-                List<Piece> pieces = p == PlayerColor.White ? _board.WhitePieces : _board.BlackPieces;
-                foreach (var piece in pieces)
-                {
-                    List<Move> moves = GetAvailableMoves(piece, _board);
-                    if (moves.Count > 0)
-                        return CheckState.CHECK;
-                }
-                return CheckState.MATE;
+                return canMove ? CheckState.CHECK : CheckState.MATE;
             }
 
-            return CheckState.NONE;
+            return !canMove ? CheckState.STALE : CheckState.NONE;
         }
 
     }

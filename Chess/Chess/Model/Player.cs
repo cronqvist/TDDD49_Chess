@@ -90,6 +90,9 @@ namespace Chess.Model
 
         public override void StartTurn()
         {
+
+            System.Threading.Thread.Sleep(100);
+
             List<Piece> pieces = _color == PlayerColor.Black ?_board.BlackPieces : _board.WhitePieces;
 
             List<Piece> piecesCopy = new List<Piece>();
