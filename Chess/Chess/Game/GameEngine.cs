@@ -49,7 +49,7 @@ namespace Chess.Game
             _players = new Queue<Player>();
 
             _players.Enqueue(new HumanPlayer(PlayerColor.White, _board, this.MoveTo, this.HumanSelectSquare));
-            _players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
+            _players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new Offensive()));
 
             currentPlayer = _players.Dequeue();
 
@@ -72,7 +72,7 @@ namespace Chess.Game
 
             _players = new Queue<Player>();
             _players.Enqueue(new HumanPlayer(PlayerColor.White, _board, this.MoveTo, this.HumanSelectSquare));
-            _players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
+            _players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new Offensive()));
 
             currentPlayer = _players.Dequeue();
             currentPlayer.StartTurn();

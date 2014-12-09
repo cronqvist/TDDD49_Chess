@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System;
 using Chess.Game;
 using System.Diagnostics;
+using System.Linq;
+
 
 namespace Chess.Model
 {
@@ -107,25 +109,20 @@ namespace Chess.Model
             Piece p = ret.Item2;
             Move m = ret.Item1;
 
-            int oCount = pieces.Count;
-
             _selectCb(_board[p.Position.X, p.Position.Y]);
             _makeMoveCb(_board[m.Position.X, m.Position.Y]);
 
-            int nCount = pieces.Count;
-
-            Debug.Assert(nCount == oCount);
         }
 
     }
 
-    abstract class AIStrategy
+    public abstract class AIStrategy
     {
 
         public abstract Tuple<Move, Piece> ChooseMove(List<Piece> pieces, GameBoard board);
     }
 
-    class RandomStrategy : AIStrategy
+    public class RandomStrategy : AIStrategy
     {
         public override Tuple<Move, Piece> ChooseMove(List<Piece> pieces, GameBoard board)
         {
@@ -150,6 +147,38 @@ namespace Chess.Model
 
             Debug.Assert(false);
             return new Tuple<Move, Piece>(null, null);
+        }
+    }
+
+    public class Offensive : AIStrategy
+    {
+        public override Tuple<Move, Piece> ChooseMove(List<Piece> pieces, GameBoard board)
+        {
+            List<Tuple<Move, Piece, Piece>> attacks = new List<Tuple<Move, Piece, Piece>>();
+                      
+            foreach (var piece in pieces)
+            {
+                List<Move> moves = RuleEngine.GetAvailableMoves(piece, board);
+                moves = moves.FindAll(x => x.Type == MoveType.Attack);
+
+                foreach (var move in moves)
+                {
+                    Piece attackedPiece = board[move.Position.X, move.Position.Y].Piece;
+                    attacks.Add(new Tuple<Move, Piece, Piece>(move, attackedPiece, piece));
+                }
+            }
+
+            if(attacks.Count == 0)
+            {
+                RandomStrategy random = new RandomStrategy();
+                return random.ChooseMove(pieces, board);
+            }
+
+            attacks.OrderBy(x => x.Item2.Value);
+            Move attack = attacks.Last().Item1;
+            Piece selectedPiece = attacks.Last().Item3;
+
+            return new Tuple<Move, Piece>(attack, selectedPiece);
         }
     }
 }

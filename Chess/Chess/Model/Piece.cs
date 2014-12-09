@@ -7,12 +7,14 @@ namespace Chess.Model
 {
     public abstract class Piece
     {
-        
+
+        public int Value { get; protected set; }
             
         protected Piece(PlayerColor color, PiecePosition pos)
         {
             Color = color;
             Position = pos;
+
         }
 
         public PlayerColor Color { get; protected set; }
@@ -73,7 +75,7 @@ namespace Chess.Model
         public Pawn(PlayerColor color, PiecePosition pos, bool moved = false)
             : base(color, pos)
         {
-
+            Value = 1;
             hasMoved = moved;
 
             if (color == PlayerColor.White)
@@ -168,6 +170,9 @@ namespace Chess.Model
         public King(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
+
+            Value = 0;
+
             if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wK.png";
@@ -223,6 +228,8 @@ namespace Chess.Model
         public Queen(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
+            Value = 9;
+
             if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wQ.png";
@@ -260,6 +267,8 @@ namespace Chess.Model
         public Rook(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
+            Value = 5;
+
             if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wR.png";
@@ -291,9 +300,14 @@ namespace Chess.Model
 
     public class Knight : Piece
     {
+
+
         public Knight(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
+
+            Value = 3;
+
             if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wN.png";
@@ -359,6 +373,8 @@ namespace Chess.Model
         public Bishop(PlayerColor color, PiecePosition pos)
             : base(color, pos)
         {
+            Value = 3;
+
             if (color == PlayerColor.White)
             {
                 Filename = "pack://application:,,,/Chess;component/Resources/pieces/wB.png";

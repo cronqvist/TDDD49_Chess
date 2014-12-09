@@ -4,6 +4,7 @@
     {
         public Move(PiecePosition pos, MoveType type)
         {
+
             Position = pos;
             Type = type;
         }
