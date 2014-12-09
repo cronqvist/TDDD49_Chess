@@ -7,6 +7,24 @@ using System.Diagnostics;
 
 namespace Chess.Game
 {
+
+    public class InvalidMoveTypeException : Exception
+    {
+        public InvalidMoveTypeException()
+        {
+        }
+
+        public InvalidMoveTypeException(string message)
+            : base(message)
+        {
+        }
+
+        public InvalidMoveTypeException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+
     public class GameEngine
     {
         //public Square[][] Board { get; private set; }
@@ -18,7 +36,7 @@ namespace Chess.Game
         private List<Move> _moves;
         private Square _selectedSquare;
 
-        private Queue<Player> players;
+        private Queue<Player> _players;
         private Player currentPlayer;
 
         private FileSystemWatcher _fileSystemWatcher;
@@ -27,17 +45,13 @@ namespace Chess.Game
         {
             Turn = PlayerColor.White;
             _board = new GameBoard();
-
-            players = new Queue<Player>();
-            players.Enqueue(new HumanPlayer(PlayerColor.White, _board, this.MoveTo, this.HumanSelectSquare));
-            //players.Enqueue(new AIPlayer(PlayerColor.White, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
-            players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
-
-            currentPlayer = players.Dequeue();
-
-            //_ruleEngine = new RuleEngine(Board);
-
             _xmlExport = new XmlExport(this);
+            _players = new Queue<Player>();
+
+            _players.Enqueue(new HumanPlayer(PlayerColor.White, _board, this.MoveTo, this.HumanSelectSquare));
+            _players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
+
+            currentPlayer = _players.Dequeue();
 
             if (File.Exists(XmlFilename))
             {
@@ -48,8 +62,7 @@ namespace Chess.Game
                 _xmlExport.Export(XmlFilename); // create a new xml document
             }
 
-            fileSystemWatcherinit(); // watch for changes in xml file*/
-
+            fileSystemWatcherinit(); // watch for changes in xml file
             currentPlayer.StartTurn();
         }
 
@@ -57,12 +70,11 @@ namespace Chess.Game
         {
             Turn = PlayerColor.White;
 
-            players = new Queue<Player>();
-            players.Enqueue(new HumanPlayer(PlayerColor.White, _board, this.MoveTo, this.HumanSelectSquare));
-            players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
+            _players = new Queue<Player>();
+            _players.Enqueue(new HumanPlayer(PlayerColor.White, _board, this.MoveTo, this.HumanSelectSquare));
+            _players.Enqueue(new AIPlayer(PlayerColor.Black, _board, this.MoveTo, this.AISelectSquare, new RandomStrategy()));
 
-            currentPlayer = players.Dequeue();
-
+            currentPlayer = _players.Dequeue();
             currentPlayer.StartTurn();
 
             _board.BuildStartPieces();
@@ -105,8 +117,23 @@ namespace Chess.Game
             _moves = RuleEngine.GetAvailableMoves(piece, _board); // gets the new moves for the current piece
             foreach (Move move in _moves)
             {
-                SquareBackground bg = move.Type == MoveType.Move ? SquareBackground.Move : SquareBackground.Attacked;
+                SquareBackground bg = GetBackground(move.Type);
                 Board.SetBackgroundAt(move.Position.X, move.Position.Y, bg);
+            }
+        }
+
+        private SquareBackground GetBackground(MoveType mt)
+        {
+            switch (mt)
+            {
+                case MoveType.PromoteQueen :
+                    return SquareBackground.Promote;
+                case MoveType.Attack :
+                    return SquareBackground.Attacked;
+                case MoveType.Move :
+                    return SquareBackground.Move;
+                default :
+                    throw new InvalidMoveTypeException("lol fail");
             }
         }
 
@@ -180,76 +207,14 @@ namespace Chess.Game
 
         public void HandleInput(Square square)
         {
-
             currentPlayer.SquarePressed(square);
-
-           /* Piece piece = square.Piece;
-
-            if (piece != null && piece.Color == Turn) // a piece of correct turn was pressed
-            {
-                _selectedSquare = square;
-
-                if (_moves != null) // if there already are moves, reset them
-                {
-                    resetBackgrounds(_moves);
-                }
-
-                _moves = RuleEngine.GetAvailableMoves(piece, _board); // gets the new moves for the current piece
-                foreach (Move move in _moves)
-                {
-                    SquareBackground bg = move.Type == MoveType.Move ? SquareBackground.Move : SquareBackground.Attacked;
-                    Board.SetBackgroundAt(move.Position.X, move.Position.Y, bg);
-                }
-            }
-            else if (square.Background != square.OriginalBackground) // if one of the moves was pressed
-            {
-                // valid square was pressed for move
-                foreach (Move move in _moves)
-                {
-                    if (Board[move.Position.X, move.Position.Y] == square) // find the move
-                    {
-                 
-                        _board.MovePiece(_selectedSquare.Piece, move.Position);
-
-                        PlayerColor p = Turn == PlayerColor.White ? PlayerColor.Black : PlayerColor.White;
-                        CheckState cState = RuleEngine.GetCheckState(p, _board);
-
-                        switch (cState)
-                        {
-                            case CheckState.MATE :
-                                MessageBox.Show("lol check mate!", "lol");
-                                _board.ClearBoard();
-                                NewGame();
-                                break;
-                            case CheckState.CHECK :
-                                MessageBox.Show("lol check!", "lol");
-                                break;
-                            default :
-                                break;
-                        }
-
-                        break;
-                    }
-                }
-
-               
-                swapTurn();
-                resetBackgrounds(_moves);
-
-                _fileSystemWatcher.EnableRaisingEvents = false;
-                _xmlExport.Export(XmlFilename);
-                _fileSystemWatcher.EnableRaisingEvents = true;
-
-                _selectedSquare = null;
-                _moves = null;
-            }*/
         }
 
         private void swapTurn()
         {
             Turn = Turn == PlayerColor.White ? PlayerColor.Black : PlayerColor.White;
-            players.Enqueue(currentPlayer);
-            currentPlayer = players.Dequeue();
+            _players.Enqueue(currentPlayer);
+            currentPlayer = _players.Dequeue();
             currentPlayer.StartTurn();
         }
 

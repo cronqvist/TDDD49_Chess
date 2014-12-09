@@ -151,24 +151,22 @@ namespace Chess.Model
 
         public void KillPiece(Piece p)
         {
-            int rm;
+
 
             if (p.Color == PlayerColor.Black)
             {
-                rm = BlackPieces.RemoveAll(piece => p.Position == piece.Position);
+               BlackPieces.RemoveAll(piece => p.Position == piece.Position);
                 if (p.IsKnight())
-                    rm = BlackKnights.RemoveAll(piece => p.Position == piece.Position);
+                   BlackKnights.RemoveAll(piece => p.Position == piece.Position);
             }
             else
             {
-                rm = WhitePieces.RemoveAll(piece => p.Position == piece.Position);
+                WhitePieces.RemoveAll(piece => p.Position == piece.Position);
                 if (p.IsKnight())
-                    rm = WhiteKnights.RemoveAll(piece => p.Position == piece.Position);
+                    WhiteKnights.RemoveAll(piece => p.Position == piece.Position);
             }
 
-            int i;
-            if(rm > 1)
-                i = 1;
+
 
             _board[p.Position.X, p.Position.Y].Piece = null;
         }
@@ -185,8 +183,29 @@ namespace Chess.Model
                 KillPiece(nSquare.Piece);
             }
 
+            if (newMove.Type == MoveType.PromoteQueen)
+            {
+                p = PromotePiece(p);
+            }
+
             p.Position = newMove.Position;
             nSquare.Piece = p;
+        }
+
+        private Piece PromotePiece(Piece p)
+        {
+            Queen q = new Queen(p.Color, p.Position);
+            KillPiece(p);
+            if (q.Color == PlayerColor.White)
+            {
+                WhitePieces.Add(q);
+            }
+            else
+            {
+                BlackPieces.Add(q);
+            }
+
+            return q;
         }
 
 

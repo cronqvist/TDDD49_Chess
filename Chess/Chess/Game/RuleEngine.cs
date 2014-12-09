@@ -12,20 +12,12 @@ namespace Chess.Game
 
     public class RuleEngine
     {
-        //private readonly GameBoard _board;
-
-        /*public RuleEngine(GameBoard board)
-        {
-            _board = board;
-        }*/
 
         public static List<Move> GetAvailableMoves(Piece piece, GameBoard _board)
         {
             List<Move> ret = new List<Move>();
             List<Move> potentialMoves = piece.GetAvailableMoves(_board);
             PiecePosition orgPos = piece.Position;
-
-            int bCount_old = _board.BlackPieces.Count;
 
             //Check for "self check" 
             foreach (var move in potentialMoves)
@@ -43,11 +35,37 @@ namespace Chess.Game
                     ret.Add(move);
             }
 
-            int bCount_new = _board.BlackPieces.Count;
-            Debug.Assert(bCount_new == bCount_old);
-            
-
             return ret;
+        }
+
+        public static bool IsPromotePos(PiecePosition p)
+        {
+            return p.Y == 0 || p.Y == 7;
+        }
+
+
+        public static CheckState GetCheckState(PlayerColor p, GameBoard _board)
+        {
+            bool canMove = false;
+            King king = p == PlayerColor.White ? _board.WhiteKing : _board.BlackKing;
+
+            List<Piece> pieces = p == PlayerColor.White ? _board.WhitePieces : _board.BlackPieces;
+            foreach (var piece in pieces)
+            {
+                List<Move> moves = GetAvailableMoves(piece, _board);
+                if (moves.Count > 0)
+                {
+                    canMove = true;
+                    break;
+                }
+            }
+
+            if (IsThreatened(king, _board))
+            {
+                return canMove ? CheckState.CHECK : CheckState.MATE;
+            }
+
+            return !canMove ? CheckState.STALE : CheckState.NONE;
         }
 
         private static bool IsThreatened(Piece p, GameBoard b)
@@ -111,7 +129,7 @@ namespace Chess.Game
                     List<Move> moves = otherPiece.GetAvailableMoves(b);
                     foreach (var move in moves)
                     {
-                        if (move.Type == MoveType.Attack && move.Position == pos)
+                        if ((move.Type == MoveType.Attack || move.Type == MoveType.PromoteQueen) && move.Position == pos)
                             return true;
                     }
 
@@ -122,29 +140,6 @@ namespace Chess.Game
             return false;
         }
 
-        public static CheckState GetCheckState(PlayerColor p, GameBoard _board)
-        {
-            bool canMove = false;
-            King king = p == PlayerColor.White ? _board.WhiteKing : _board.BlackKing;
-
-            List<Piece> pieces = p == PlayerColor.White ? _board.WhitePieces : _board.BlackPieces;
-            foreach (var piece in pieces)
-            {
-                List<Move> moves = GetAvailableMoves(piece, _board);
-                if (moves.Count > 0)
-                {
-                    canMove = true;
-                    break;
-                }
-            }
-
-            if (IsThreatened(king, _board))
-            {
-                return canMove ? CheckState.CHECK : CheckState.MATE;
-            }
-
-            return !canMove ? CheckState.STALE : CheckState.NONE;
-        }
 
     }
 }

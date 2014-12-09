@@ -24,6 +24,9 @@ namespace Chess.Converters
                 case SquareBackground.Move:
                     brush.Color = Colors.LightGreen;
                     break;
+                case SquareBackground.Promote:
+                    brush.Color = Colors.LightYellow;
+                    break;
                 default:
                     brush.Color = Colors.White;
                     break;

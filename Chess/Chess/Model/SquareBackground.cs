@@ -5,6 +5,7 @@
         White,
         Black,
         Move,
-        Attacked
+        Attacked,
+        Promote
     }
 }

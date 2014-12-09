@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -116,7 +117,15 @@ namespace Chess.Model
 
                 if (curSquare.Piece == null)
                 {
-                    ret.Add(new Move(new PiecePosition(pos.X, row), MoveType.Move));
+                    PiecePosition newPos =  new PiecePosition(pos.X, row);
+                    if (RuleEngine.IsPromotePos(newPos))
+                    {
+                        ret.Add(new Move(newPos, MoveType.PromoteQueen));
+                    }
+                    else 
+                    {
+                        ret.Add(new Move(newPos, MoveType.Move));
+                    }
                 }
                 else
                 {
@@ -133,7 +142,9 @@ namespace Chess.Model
                 Piece other = board[attackX1, attackY].Piece;
                 if (other != null && other.Color != Color)
                 {
-                    ret.Add(new Move(new PiecePosition(attackX1, attackY), MoveType.Attack));
+                    PiecePosition newPos = new PiecePosition(attackX1, attackY);
+                    MoveType t = RuleEngine.IsPromotePos(newPos) ? MoveType.PromoteQueen : MoveType.Attack;
+                    ret.Add(new Move(newPos, t));
                 }
             }
 
@@ -142,7 +153,9 @@ namespace Chess.Model
                 Piece other = board.GetPieceAt(attackX2, attackY);
                 if (other != null && other.Color != Color)
                 {
-                    ret.Add(new Move(new PiecePosition(attackX2, attackY), MoveType.Attack));
+                    PiecePosition newPos = new PiecePosition(attackX2, attackY);
+                    MoveType t = RuleEngine.IsPromotePos(newPos) ? MoveType.PromoteQueen : MoveType.Attack;
+                    ret.Add(new Move(newPos, t));
                 }
             }
 
